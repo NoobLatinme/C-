@@ -1,0 +1,217 @@
+1.函数重载
+    1.1函数重载的概述
+        作用：函数名可以相同，提高复用性
+
+        函数重载满足条件：
+            ·同一个作用域下
+            ·函数名相同
+            ·函数参数‘类型不同’或‘个数不同’或者‘顺序不同’
+
+        注意：函数的‘返回值’不可以作为函数重载的条件
+
+        #.........
+        int func(int a,int b);
+        int func(double a,double b);
+        int func(int b,int a);
+        void func(int a,int b);
+        int main()
+        {
+            func(a,b)//√
+            func(a,b)//√
+            func(b,a)//√
+            func(a,b)//×,无法根据返回值重载，产生二义性
+        }
+    1.2函数重载的注意事项
+        1·引用作为函数重载
+        #.........
+        //参数值类型不同，编译通过
+        void func(int &a);       
+        void func(const int &a);
+        int main()
+        {
+            int a=10;
+            func(a);
+            //将调用 void func(int *a),a是变量，而const int &a->只读
+            func(10);
+            //将调用 void func(const....)，const...自动转换
+            {
+                int temp=10;
+                const int &a=temp;
+            }    
+            而void func(int &a=10)是不合法的
+        }
+        2·函数重载碰到默认参数
+        #.........
+        void func(int a);
+        void func(int a,int b=10);
+        int main()
+        {
+            //报错，出现二义性
+            func(10);
+        }
+2.类和对象
+    C++面向对象的三大特性：‘封装、继承、多态’
+    C++认为‘万事万物都皆为对象’，对象上有其属性和行为
+
+    例如：
+        人可以作为对象，属性有姓名、年龄、身高...
+        具有相同性质的对象，我们可以抽象称为类，人属于人类、车属于车类
+2.1封装
+    2.1.1封装的意义
+    封装的意义：
+    ·将属性和行为作为一个整体，表现生活中的事物
+    ·将属性和行为加以权限控制
+
+    封装的意义一：
+        在设计类的时候，属性和行为写在一起，表现事物
+    语法：
+        class 类名{访问权限：属性/行为}
+        //类中的属性和行为统称为‘成员’
+        //属性->成员属性 成员变量
+        //行为->成员行为 成员方法
+    #.......
+    const double PI = 3.14;
+    class Circle
+    {
+    public:               //访问权限
+        int R;                //属性
+        double calculateZC()//行为
+        {
+            return 2 * PI * R;
+        }
+    };
+    int main()
+    {
+        Circle c1; //通过圆类，创建具体的圆（对象）
+        c1.R = 10;
+        cout << "周长：" << c1.calculateZC() << endl;
+    }
+
+    封装意义二：
+    类在设计时，可以把属性和行为放在不同的权限下，加以控制
+    访问权限有三种：
+        1.公共权限 public    //在类内外都可以被访问
+        2.保护权限 protected //类内可以访问，类外不可以访问
+        3.私有权限 private   //类内可以访问，类外不可以访问
+    
+    2.1.2class和struct的区别
+    在C++中区别在于默认权限不同：struct->public,class->private
+
+    2.1.3成员属性设置为私有
+    优点：
+        ·可以自己控制读写权限
+        ·对于写可以检测数据的有效性
+        class humen
+        {
+        //通过公共的行为操作属性能够很好的保护私有属性
+        public: //可读可写
+            void setName(string name)
+            {
+                name = name;
+            }
+            string getName(string name)
+            {
+                return name;
+            }
+        public: //只读
+            int getAge()
+            {
+                return age;
+            }
+        
+        public: //检测数据有效性
+            void setAge(int age)
+            {
+                if (age < 0 || age >100)
+                {
+                    age = 0;
+                    return;
+                }
+                age = age;
+            }
+        public: //只写
+            void setLover(string lover)
+            {
+                lover = lover;
+            }
+        private:
+            string name;
+        
+            int age;
+        
+            string lover;
+        };
+        
+        int main()
+        {
+            humen p;
+            p.setName("张三");
+        }
+    封装案例：
+    //分别用成员函数和全局函数判断两立方体是否相同
+    class Cube
+    {
+    public:
+	int getM_H()
+	{
+		return m_H;
+	}
+	int getM_L()
+	{
+		return m_L;
+	}
+	int getM_W()
+	{
+		return m_W;
+	}
+	void setM_H(int H)
+	{
+		m_H = H;
+	}
+	void setM_L(int L)
+	{
+		m_L = L;
+	}
+	void setM_W(int w)
+	{
+		m_W =w;
+	}
+
+	int V()
+	{
+		return m_H * m_L * m_W;
+	}
+	bool isSamebyclass(Cube &c)
+	{
+		if (m_L == c.getM_L() && m_H == c.getM_H() && m_W == c.getM_W())
+			return true;
+		else
+			return false;
+	}
+    private:
+        int m_H;
+        int m_L;
+        int m_W;
+    };
+    bool isSamebyGolbal(Cube &c1,Cube &c2)
+    {
+        if(c1.getM_H==c2.getM_H && c1.getM_L==c2.getM_L && c1.getM_W==c2.getM_W)
+            return true;
+        else 
+            return false;
+    }
+    int main()
+    {
+        Cube c1;
+        c1.setM_H(10);
+        c1.setM_L(10);
+        c1.setM_W(10);
+
+        Cube c2;
+        c2.setM_H(10);
+        c2.setM_L(10);
+        c2.setM_W(10);
+        bool ret1=c1.isSamebyclass(Cube c2);
+        bool ret2=isSamebyGolbal(Cube c1,Cube c2);
+    }
+
