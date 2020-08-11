@@ -10,6 +10,7 @@ void CreateRandomArr(int* str,int length)
 
 void Sort(int* str,int length)
 {
+    int temp=0;
     for(int i=0;i<length-1;i++)
     {
         for(int j=0;j<length-i-1;j++)
