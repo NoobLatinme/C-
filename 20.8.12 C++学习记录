@@ -1,3 +1,100 @@
+        3.3deque容器
+            功能：双端数组，可以对头端进行插入删除操作
+            与vector区别：
+                ·vector为单端，数据量越大效率越低
+                ·deque相对而言，对头部的插入删除速度会比vector快
+                ·vector访问元素时的速度会比deque快，这和两者的内部实现有关
+            内部工作原理：
+                deque内部有个‘中控器’，维护每‘段’‘缓冲区’的内容，缓冲区存放真实数据
+                中控器维护的是缓冲区的地址，使得使用deque时像一片连续的内存地址
+                
+                Deque容器的迭代器也是支持随机访问的
+            3.3.2deque构造函数
+                1.和vector一样
+            3.3.3赋值操作
+                1.和vector一样
+            3.3.4大小操作
+                1.和vector大致一样，但没有获取容量机制
+            3.3.5插入和删除
+                1.push_front() //头插 2.pop_front()
+                3.其余和vector一样
+            3.3.6数据存取
+                1.front()//获取第一个元素 2.back()获取最后一个元素
+                3.其余与vector一样
+            3.3.7排序操作
+                利用算法对容器排序
+                1.sort(iterator begin(),iterator end());
+                总结：对于支持随机访问的迭代器容器，都可以使用sort()
+        3.4案例练习
+                class Person
+                {
+                public:
+                    Person(string name,int score)
+                {
+                    this->m_name=name;
+                    this->m_score=score;
+                }
+                    int m_score;
+                    string m_name;
+                };
+                
+                void CreatePerson(vector<Person>&v)
+                {
+                    string nameSeed="ABCDE";
+                    for(int i=0;i<5;i++)
+                    {
+                        string name="选手";
+                        name+=nameSeed[i];
+                        int score=0;
+                        Person p(name,score);
+                        v.push_back(p);
+                    }
+                }
+                
+                void SetScore(vector<Person>&v)
+                {
+                    srand((unsigned int)time(NULL));
+                    for(vector<Person>::iterator it=v.begin();it!=v.end();it++)
+                    {
+                        deque<int>J;
+                        for(int i=0;i<10;i++)
+                        {      
+                            int num=rand()%41+60;//随机60~100分
+                            J.push_back(num);
+                        }
+                        sort(J.begin(),J.end());
+                        J.pop_front();
+                        J.pop_back();
+                        int num=0;   //此处为总分
+                        for(deque<int>::iterator dit=J.begin();dit!=J.end();dit++)
+                        {
+                            num+=*dit;   
+                        }
+                        int avg=0;
+                        avg=num/J.size();
+                        it->m_score=avg;
+                    }
+                }
+                
+                void show(vector<Person>v)
+                {
+                    for(vector<Person>::iterator it=v.begin();it!=v.end();it++)
+                    {
+                        cout<<"选手姓名："<<it->m_name<<" "<<"选手分数："<<it->m_score<<endl;
+                    }
+                }
+                void test()
+                {
+                    //v1中创建5名选手
+                    vector<Person>v1;
+                
+                    CreatePerson(v1);
+                
+                    SetScore(v1);
+                
+                    show(v1);
+                
+                }
         3.5stack容器
             3.5.1基本概念
                 本质：栈
