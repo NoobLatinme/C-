@@ -1,0 +1,223 @@
+        3.5stack容器
+            3.5.1基本概念
+                本质：栈
+                注意事项：1.先进后出 2.不允许遍历行为
+            3.5.2常用接口
+                1.stack<T>stk 2.stack(const stack &s)
+                3.stack operator=(const stack& stk)
+                4.push()  5.pop() 6.top()//返回栈顶元素
+                7.empty() //判断是否为空 8.size() //返回栈的大小
+        3.6queue容器
+            3.6.1基本概念    
+                本质：队列
+                注意事项：1.先进先出 2.不允许有遍历行为，只能访问队头(front)和队尾(back)
+            3.6.2常用接口
+                除了top()其余和stack一样
+                1.front()//返回队头 2.back()//返回队尾
+        3.7list容器
+            3.7.1基本概念
+                本质：链表
+                注意事项：
+                    1.STL中的链表是一个‘双向循环’链表
+                    2.list中的迭代器只支持前移和后移，属于双向迭代器
+            3.7.2构造函数
+                1.list<T>lst 2list(beg(),end()) 
+                3.list(n,elem) 4.list(const list &lst)
+            3.7.3赋值和交换
+                1.operator= 2.assign(n,elem) 3.assign(beg,end) 
+                3.swap(lst)
+            3.7.4大小操作
+                除了容量Capacity()外，其余与vector一致
+            3.7.5插入和删除
+                1.push_back() 2.push_front() 3.pop_back() 4.pop_back()
+                5.insert(pos,elem) 6.insert(pos,n,elem) 7.insert(pos,beg,end)
+                8.clear() 9.erase(beg,end) 10.remove(elem)//删除容器中所有与elem所匹配的数据
+                /*pos ->使用迭代器
+                    list<int>::iterator it=L.begin();
+                    insert(++it,elem);*/
+            3.7.6数据存取
+                1.front() //返回第一个元素2.back()//返回最后一个元素 
+                注意事项：1.无[]重载 2.无at()，迭代器不支持随机访问
+            3.7.7反转和排序  
+                1.reverse() 
+                //所有不支持随机访问的迭代器的容器‘不支持’算法
+                //不支持随机访问的迭代器的容器内部会提供一些成员函数的算法
+                2.sort() //默认升序，降序‘提供布尔类型’的回调函数，返回 v1>v2
+                //在排序自定义数据类型时需要提供‘一定规则（回调函数）’
+        3.8set/multiset容器
+            3.8.1基本概念
+                本质：属于关联式容器，底层为二叉树
+                特点：所有元素都会在插入时自动被排序
+                区别：set不允许有重复的元素而multiset允许
+            3.8.2set构造和赋值
+                1.set<T>st 2.set(const set& st)
+                3.operator=
+            3.8.3set大小和交换
+                1.size() 2.empty() 3.swap(st)
+            3.8.4set插入和删除
+                1.insert(elem) 2.clear() 3.erase(pos/beg,end/elem)
+            3.8.5set查找和统计
+                1.find(key)//存在返回该键的迭代器，不存在返回st.end() 2.count(key)//计数
+            3.8.6set和multiset区别
+                1.set不可以插入重复数据
+                2.set插入数据的同时会返回插入结果，表示插入是否成功（返回迭代器和布尔）
+                3.multiset插入数据时不检测数据，因此可以重复插入
+            3.8.7pair对组创建
+                功能描述：成对出现的数据，利用队组可以返回两个数据
+                语法：（不需要包含头文件）
+                    1.pair<type,type>p(val1,val2);
+                    2.pair<type,type>p=make_pair(val1,val2);
+
+                    pair<string,int>p("Tom",20);
+                    cout<<"姓名："<<p.first<<"年龄："<<p.second<<endl;
+                    pair<string,int>p1=make_pair("jery",30);
+                    cout<<"姓名："<<p1.first<<"年龄："<<p1.second<<endl;
+            3.8.8set排序
+                利用仿函数可以改变排序规则
+                class Person
+                {
+                public:
+
+                    Person(string name,int age)
+                    {
+                        this->m_age=age;
+                        this->m_name=name;
+                    }
+                    int m_age;
+                    string m_name;
+                };
+
+                //仿函数本质是个数据类型
+                class Mycompare
+                {
+                public:
+                    bool operator()(int v1,int v2)
+                    {
+                        return v1>v2;
+                    }
+                };
+
+                class Diy_Mycompare
+                {
+                public:
+                    bool operator()(const Person& p1,const Person &p2)
+                    {
+                        return p1.m_age>p2.m_age;
+                    }
+                };
+                void test()
+                {
+                    //set存放内置数据类型
+                    set<int>s1;
+
+                    s1.insert(10);
+                    s1.insert(30);
+                    s1.insert(50);
+                    s1.insert(20);
+
+                    for(set<int>::iterator it=s1.begin();it!=s1.end();it++)
+                    {
+                        cout<<*it<<" ";
+                    }
+                    cout<<endl;
+
+                    set<int,Mycompare>s2;
+
+                    s2.insert(10);
+                    s2.insert(30);
+                    s2.insert(50);
+                    s2.insert(20);
+
+                    for(set<int,Mycompare>::iterator it=s2.begin();it!=s2.end();it++)
+                    {
+                        cout<<*it<<" ";
+                    }
+                    cout<<endl;
+
+                    //set存放自定义数据类型
+
+                    Person p1("刘备",25);
+                    Person p2("张飞",26);
+                    Person p3("关羽",27);
+
+                    set<Person,Diy_Mycompare>s3;
+
+                    s3.insert(p1);
+                    s3.insert(p2);
+                    s3.insert(p3);
+                    
+                    for(set<Person,Diy_Mycompare>::iterator it=s3.begin();it!=s3.end();it++)
+                    {
+                        cout<<"姓名："<<it->m_name<<" "<<"年龄："<<it->m_age<<endl;
+                    }
+                    cout<<endl;
+                }
+        3.9map/multimap容器
+            3.9.1基本概念
+                本质：
+                    map/multimap属于关联式容器，底层用二叉树实现
+                特点：
+                    1.map中‘所有’元素都是‘pair’
+                    2.键&值(python中的diractor)
+                    3.‘所有元素’都会根据元素的键值自动排序
+                优点：
+                    1.可以根据key值‘快速’找到value值
+                    2.map‘不允许’容器中有重复的key值
+                    3.multimap‘允许’容器中有重复的key值
+            3.9.2map构造和赋值
+                1.与set/multiset一致，但数据类型中必须是‘成对’的 map<int,int>m;
+            3.9.3大小和交换
+                1.与set/multiset一致
+            3.9.4插入和删除
+                1.1 insert(pair<int,int>(elem,elem)) 
+                1.2 insert(make_pair(elem,elem)) 
+                1.3 insert(map(<int,int>::valuetype(key,value))) 
+                1.4 m[4] //不建议，主要用key来访问value,例如用键4 （m[4]）访问值 
+                2.其余与mat/multiset一致，删除时按照key来删除，
+            3.9.5查找和统计
+                1.‘按照key’查找与统计，其余与set一致
+            3.9.6排序
+                利用仿函数可以改变排序规则
+                class Person
+                {
+                public:
+
+                    Person(string name,int age)
+                    {
+                        this->m_age=age;
+                        this->m_name=name;
+                    }
+                    int m_age;
+                    string m_name;
+                };
+
+                //仿函数本质是个数据类型
+                class Mycompare
+                {
+                public:
+                    bool operator()(int v1,int v2)
+                    {
+                        return v1>v2;
+                    }
+                };
+
+                void test()
+                {
+                    //map存放内置数据类型
+                    map<int,int,Mycompare>p1;
+                    p1.insert(make_pair(1,10));
+                    p1.insert(make_pair(2,30));
+
+                    //map存放自定义数据类型
+                    map<int,Person,Mycompare>p2;
+                    p2.insert(make_pair(1,Person("张三",20)));
+                    p2.insert(make_pair(2,Person("李四",30)));
+
+                    for(map<int,Person>::iterator it=p2.begin();it!=p2.end();it++)
+                    {
+                        cout<<"键："<<it->first<<"值->姓名："
+                        <<it->second.m_name<<"值->年龄："<<it->second.m_age<<endl;
+                    }
+                }
+
+                
