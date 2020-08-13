@@ -1,0 +1,305 @@
+        案例练习：
+            #define CEHUA 1
+            #define MEISHU 2
+            #define JISHU 3
+            class Person
+            {
+            public:
+
+                int m_Salary;
+                string m_name;
+
+            };
+            //创建员工
+            void CreateWorker(vector<Person> &p1)
+            {
+
+                string nameSeed="ABCDEFGHIJ";
+                for(int i=0;i<10;i++)
+                {
+                    Person p;
+                    p.m_name="员工";
+                    p.m_name+=(nameSeed[i]);
+
+                    p.m_Salary=rand()%10000+9999;
+                    p1.push_back(p);
+                }
+            }
+            //随机给员工分组
+            void setGroup(vector<Person>&p1,multimap<int,Person>&m1)   
+            {
+                for(vector<Person>::iterator it=p1.begin();it!=p1.end();it++)
+                {
+                    int DepId=rand()%3+1;//1~3
+                    //将员工随机分配到部门
+                    m1.insert(make_pair(DepId,*it));
+                }
+            }
+            //展示员工信息
+            void show(multimap<int,Person>&p)
+            {
+                int count=0;  //统计各部门人数
+                
+                cout<<"策划部门："<<endl;
+                multimap<int,Person>::iterator it=p.find(CEHUA);  //找到某个部门第一次出现的位置
+                for(;it!=p.end() && count<p.count(CEHUA) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
+                }
+                count=0;
+                cout<<"美术部门："<<endl;
+                it=p.find(MEISHU);
+                for(;it!=p.end() && count<p.count(MEISHU) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
+                }
+                count=0;
+                cout<<"技术部门："<<endl;
+                it=p.find(JISHU);
+                for(;it!=p.end() && count<p.count(JISHU) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
+                }
+
+            }
+
+            void test()
+            {
+                srand((unsigned int)time(NULL));
+                vector<Person>v_worker;
+                CreateWorker(v_worker);
+                multimap<int,Person>m_Department;
+                setGroup(v_worker,m_Department);
+                show(m_Department);
+            }
+    4.STL-函数对象
+        4.1函数对象
+            4.1.1概念
+                1.重载函数调用操作符的类，其对象称为函数对象
+                2.函数对象使用重载()时，行为类似函数调用，也叫仿函数
+                本质：类，不是函数
+            4.1.2函数对象使用
+                1.使用时可以像普通函数那样调用，可以有参数
+                2.函数对象‘超出’普通函数的概念，函数对象可以有自己的状态
+                3.可以作为参数传递
+                class MyAdd
+                {
+                public:
+
+                    MyAdd()
+                    {
+                        this->count=0;
+                    }
+                    void operator()(string text)
+                    {
+                        cout<<"ssss："<<text<<endl;
+                        //函数本身可以有自己的行为
+                        this->count++;
+                    }
+                private:
+                    int count;
+                };
+                //仿函数可以作为函数参数传入
+                void dowork(MyAdd &M,string text)
+                {
+                    M(text);
+                }
+                void test()
+                {
+                    string text="11111";
+                    MyAdd m;
+                    dowork(m,text);
+                }
+        4.2谓词(pred)(predicate)
+            4.2.1谓词概念
+                概念：
+                    1.返回bool类型的仿函数称为谓词
+                    2.如果重载()接收一个参数，那么叫一元谓词
+                    3.如果重载()接收两个参数，那么叫二元谓词
+        4.3内建的函数对象
+            4.3.1内建函数对象意义
+                概念：STL内建了一些函数对象
+                分类：1.算数仿函数 2.关系仿函数 3.逻辑仿函数
+                用法：
+                    1.这些仿函数所产生的对象和一般函数完全相同
+                    2.使用内建函数对象，需要引入头文件 functional
+            4.3.2算数仿函数        
+                功能描述：1.四则运算(+-×÷) 2.其中negate(取反)是一元运算，其他都是二元运算  
+                negate<int>n;
+                n(50);
+                plus<int>m;
+                m(10,20);
+            4.3.3关系仿函数
+                功能描述：实现关系对比(> < = <= >= !=)(greater less equal less_equal greater_equal not_in_equal)
+            4.3.4逻辑仿函数
+                功能描述：实现逻辑运算(& | !)(logical_and logical_or logical_not)
+    5.STL-常用算法
+        概念：
+            1.算法主要有头文件 algorithm functional numeric
+            2.algorithm是所有STL头文件中最大的一个
+            3.functional定义了一些模板类，用以声明函数对象
+            4.numeric体积小只包含几个序列上进行简单数学运算 的模板函数
+        5.1常用遍历算法
+            5.1.1for_each
+                函数原型：for_each(iterator beg,iterator end,_func)
+                class Print_f
+                {
+                    public:
+                    void operator()(int val)
+                    {
+                        cout<<val<<" ";
+                    }
+                };
+
+                void print_f(int val)
+                {
+                    cout<<val<<" ";
+                }
+                void test()
+                {
+                    vector<int>v;
+                    v.push_back(10);
+                    v.push_back(20);
+                    v.push_back(30);
+                    v.push_back(40);
+                    //普通函数
+                    for_each(v.begin(),v.end(),print_f);
+                    cout<<endl;
+                    //仿函数
+                    for_each(v.begin(),v.end(),Print_f());
+                }
+            5.1.2transform
+                函数原型：transform(iterator beg,iterator end,_func)
+                class Transfor_m
+                {
+                    public:
+                    int operator()(int val)
+                    {
+                        return val+100;
+                    }
+                };
+                void print_f(int val)
+                {
+                    cout<<val<<" ";
+                }
+                void test()
+                {
+                    vector<int>v;
+                    v.push_back(10);
+                    v.push_back(20);
+                    v.push_back(30);
+                    v.push_back(40);
+                    
+                    vector<int>v1;
+                    v1.resize(v.size());
+                    transform(v.begin(),v.end(),v1.begin(),Transfor_m());
+                    for_each(v1.begin(),v1.end(),print_f);
+                }
+        5.2常用查找算法
+            5.2.1find
+                功能描述：查找指定元素，返回指定元素迭代器，找不到返回结束位置迭代器
+                函数原型：find(iterator beg,iterator end,value);
+            5.2.2find_if
+                功能描述：按照条件查找元素，返回指定元素迭代器，找不到返回结束位置迭代器
+                函数原型：find_if(iterator beg,iterator end,_Pred);
+            5.2.3adjacent_find
+                功能描述：‘查找相邻’重复元素，查到返回首个重复元素的迭代器，否则返回结束位置迭代器
+                函数原型：adjacent_find(iterator beg,iterator end);    
+            5.2.4binary_search
+                功能描述：查找指定元素是否存在，返回布尔类型
+                函数原型：bool binary_search(iterator beg,iterator end,value)       
+                注意事项：在无序序列中不可用
+            5.2.5count
+                功能描述：统计元素个数
+                函数原型：count(iterator beg,iterator end,value)
+            5.2.6count_if
+                功能描述：按照条件统计元素个数
+                函数原型：count_if(iterator beg,iterator end,_Pred)
+        5.3常用排序算法
+            5.3.1sort
+                函数原型：sort(iterator beg,iterator end,_Pred)
+                注意事项：默认升序，添加谓词自定义排序
+            5.3.2random_shuffle
+                功能描述：打乱区间内的元素
+                函数原型：random_shuffle(iterator beg,iterator end,_Pred)
+                注意事项：使用时记得加上‘随机数种子’
+            5.3.3merge
+                功能描述：两个‘有序’且‘排序一致’的容器元素合并，并存储到另一个容器中以及进行排序
+                函数原型：merge(iterator beg1,iterator end1,iterator beg2,iterator end2,iterator dest)
+                /*
+                    beg1 end1 :第一个容器
+                    beg2 end2 :第二个容器
+                    dest      :目标容器开始位置迭代器
+                */
+                注意事项：两个容器必须要‘有序’且‘排序一致’
+            5.3.4reverse
+                功能描述：反转指定范围元素
+                函数原型：reverse(iterator beg,iterator end)
+        5.4常用拷贝和替换算法
+            5.4.1copy
+                功能描述：容器内指定范围的元素拷贝到另一容器中
+                函数原型：copy(iterator beg,iterator end,dest)
+                注意事项：dest :目标容器的起始迭代器
+            5.4.2replace
+                功能描述：将容器内指定范围的所有旧元素修改为新元素
+                函数原型：replace(iterator beg,iterator end,oldvalue,newvalue)
+            5.4.3replace_if
+                功能描述：将区间内所有满足条件的元素，替换成指定元素
+                函数原型:replace_if(iterator beg,iterator end,_Pred,newvalue)
+            5.4.4swap
+                功能描述：互换两个容器的元素
+                函数原型：swap(container c1,container c2)
+                注意事项：容器类型必须相同
+        5.5常用算术生成算法
+            算术生成算法属于小型算法头文件为 numeric
+            5.5.1accumulate
+                功能描述：计算区间内容器元素累计之和
+                函数原型：acculate(iterator beg,iterator end,value)
+                注意事项：value为起始值
+            5.5.2fill
+                功能描述：向容器填充指定元素(覆盖？！)
+                函数原型：fill(iterator beg,iterator end,value)
+        5.6常用集合算法
+            5.6.1set.intersection
+                功能描述：求两个容器的交集
+                函数原型：set.intersection(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                注意事项：
+                    1.开辟目标容器空间时，取两者之中较小容器的大小即可 
+                    2.dest :目标容器开始迭代器
+                    3.返回交集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+            5.6.2set.union
+                功能描述：求两个容器的并集
+                函数原型：set.union(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                注意事项：
+                    1.开辟目标容器空间时，取两者之和容器的大小即可
+                    2.dest :目标容器开始迭代器
+                    3.返回并集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+            5.6.3set.difference
+                功能描述：求两个容器的差集
+                函数原型：set.difference(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                vector<int>::iterator itEnd=set_difference(v1.begin(),v1.end(),v.begin(),v.end(),v2.begin());
+                vector<int>::iterator itEnd=set_difference(v.begin(),v.end(),v1.begin(),v1.end(),v2.begin());
+                注意事项：
+                    1.开辟目标容器空间时，取两者之中较大的容器的大小即可
+                    2.dest :目标容器开始迭代器
+                    3.返回并集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+    
+    
+                                                                ------------------20.8.13.晚
+演讲比赛流程管理系统
+    1.1比赛规则
+        1.学校举行一场比赛，共有12个人参加，比赛共两轮，第一轮为淘汰赛，第二轮为决赛
+        2.每名选手都有对应的编号，如10001~10012
+        3.比赛方式：分组比赛，每组六个人
+        4.十个评委分别给每名选手打分，去除最高最低分，求得平均分即为本轮选手成绩
+        5.当小组演讲完后，淘汰组内排名最后的三个选手，前三名晋级，进入下一轮比赛
+        6.第二轮为决赛，前三名胜出
+        7.每轮比赛过后需要显示晋级选手信息
+    1.2程序功能
+        1.开始演讲比赛：完成整届比赛流程，每个比赛阶段都需要给用户一个提示，用户按下任意键后进入下一轮
+        2.查看往届记录：查看之前比赛前三名结果，每次比赛都会记录到文件中，文件用.csv后缀名保存
+        3.清空比赛记录：将文件中数据清空
+        4.退出比赛程序
