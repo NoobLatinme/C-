@@ -1,36 +1,36 @@
-1.�ڴ����ģ��
-    ������������ź�����Ķ����ƴ��룬�ɲ���ϵͳ���й���
-        ���CPUִ�еĻ���ָ��
-        �����ǹ����ģ�������Ŀ���Ƕ���Ƶ����ִ�еĳ���ֻ��Ҫ���ڴ�����һ�ݴ��뼴��
-        ������ֻ���ģ���ֹ����������޸�������ָ��
-    ��ȫ���������ȫ�ֱ����;�̬�����Լ�����
-        ȫ�ֱ����;�̬��������ڴ�
-        ȫ�������������������ַ�����������������Ҳ����ڴ�
-        ������������ڳ���������ɲ���ϵͳ�ͷ�
-    �ܽ᣺
-        ��C++���ڳ�������ǰ��Ϊȫ�����ʹ�����
-        ���������ص��ǹ�����ֻ��
-        ��ȫ�����д��ȫ�ֱ�������̬����������
-        ���������д��const���ε�ȫ�ֳ������ַ�������
-    ��ջ�����ɱ������Զ������ͷţ���ź����Ĳ���ֵ���ֲ�������
-        ע�������Ҫ���ؾֲ������ĵ�ַ��ջ�����ٵĵ�ַ�ɱ������Զ��ͷ�
-    ���������ɳ���Ա������ͷţ�������Ա���ͷţ��������ʱ�ɲ���ϵͳ����
-    �ܽ᣺
-        ���������ɳ���Ա�������ٺ��ͷ�
-        ��C++����Ҫ����'NEW'�ڶ��������ڴ�
-    �ڴ��������壺
-    ��ͬ���������ݣ����費ͬ���������ڣ������Ǹ���������
+1.内存分区模型
+    ·代码区：存放函数体的二进制代码，由操作系统进行管理
+        存放CPU执行的机器指令
+        代码是共享的，共享的目的是对于频繁被执行的程序，只需要在内存中有一份代码即可
+        代码是只读的，防止程序意外地修改了它的指令
+    ·全局区：存放全局变量和静态变量以及常量
+        全局变量和静态变量存放在此
+        全局区还包括常量区，字符串常量和其他常量也存放于此
+        该区域的数据在程序结束后由操作系统释放
+    总结：
+        ·C++中在程序运行前分为全局区和代码区
+        ·代码区特点是共享和只读
+        ·全局区中存放全局变量、静态变量、常量
+        ·常量区中存放const修饰的全局常量和字符串常量
+    ·栈区：由编译器自动分配释放，存放函数的参数值，局部变量等
+        注意事项：不要返回局部变量的地址，栈区开辟的地址由编译器自动释放
+    ·堆区：由程序员分配和释放，若程序员不释放，程序结束时由操作系统回收
+    总结：
+        堆区数据由程序员管理开辟和释放
+        在C++中主要利用'NEW'在堆区开辟内存
+    内存四区意义：
+    不同区域存放数据，赋予不同的生命周期，给我们更大的灵活编程
 
-2.NEW������
-    ��C++����Ҫ����'NEW'�ڶ��������ڴ棬���ò�����delete�ֶ��ͷ�
-    ���������ɳ���Ա�������ٺ��ͷ�
-    �﷨�� new ��������
-    ����new���������ݣ��᷵�ظ����ݶ�Ӧ���͵�ָ��
+2.NEW操作符
+    在C++中主要利用'NEW'在堆区开辟内存，利用操作符delete手动释放
+    堆区数据由程序员管理开辟和释放
+    语法： new 数据类型
+    利用new创建的数据，会返回该数据对应类型的指针
     int*  func()
     {
-        int* p = new int(10);  //new->�ڶ��������µ��ڴ�
-        return p;              //����new�ؼ��֣����Խ����ݿ��ٵ�����
-        //ָ�뱾��Ҳ�Ǿֲ�����������ջ�ϣ�ָ�뱣��������Ƿ��ڶ���
+        int* p = new int(10);  //new->在堆区开辟新的内存
+        return p;              //利用new关键字，可以将数据开辟到堆区
+        //指针本质也是局部变量，放在栈上，指针保存的数据是放在堆区
     }
     int main()
     {
@@ -39,60 +39,60 @@
         cout << *p << endl;
         cout << *p << endl;
         cout << *p << endl;
-        delete p;   //ɾ������  delete [] arr;   
+        delete p;   //删除数组  delete [] arr;   
     }
-3.����
-    ʹ�ó�����
-        ��ָ���
+3.引用
+    使用场景：
+        比指针简单
     int a=10;
     int &ref=a;
-    ע�����
-        1.��Ҫ��������->��Ҫ���þֲ�����
-        2.������Ҫ��ʼ��
-        3.��ʼ�����ܸı�ָ��
-    ���ʣ�
-        ָ�볣��
-        ���������Զ��ý� int &ref=a -> int *const ref=a;
-        ����ָ���ָ�����޷��޸ĵģ���ָ��ָ���ֵ�����޸�
-4.��������
-    ʹ�ó��������������βΣ���ֹ�����
+    注意事项：
+        1.不要函数引用->不要引用局部变量
+        2.引用需要初始化
+        3.初始化后不能改变指向
+    本质：
+        指针常量
+        编译器会自动得将 int &ref=a -> int *const ref=a;
+        所以指针得指向是无法修改的，但指针指向的值可以修改
+4.常量引用
+    使用场景：用来修饰形参，防止误操作
 
-    int &ref=10;  //�����ñ�����һ��Ϸ��ڴ�ռ�
-    const int &ref=10; //�� 
-    �������������Զ��޸ĳ�:
+    int &ref=10;  //×引用必须引一块合法内存空间
+    const int &ref=10; //√ 
+    编译器将代码自动修改成:
         int temp=10;
         const int &ref=temp;
-5.�������
-    5.1��������Ĭ�ϲ���
-        �﷨������ֵ���� ���������������� Ĭ��ֵ��{}
+5.函数提高
+    5.1·函数的默认参数
+        语法：返回值类型 函数名（数据类型 默认值）{}
         int func(int a,b=10,c=10)
             return a+b+c;
-        ע�����
-            1.���ĳ��λ���Ѿ�����Ĭ�ϲ�������ô���λ��������Ҫ��Ĭ�ϲ���
-                int func(int a,b=10,c)  //��
-            2.�����������������Ĭ�ϲ�������ô���������ʵ�־Ͳ�����Ĭ�ϵĲ���
-            ֻ�ܺ���������������һ������Ĭ�ϲ���
+        注意事项：
+            1.如果某个位置已经有了默认参数，那么这个位置往后都需要有默认参数
+                int func(int a,b=10,c)  //×
+            2.如果函数的声明有了默认参数，那么这个函数的实现就不能有默认的参数
+            只能函数声明或函数定义一方中有默认参数
                 #define<stdio.h>
                 int func(int a=10,int b=10)
-                    ����������������
-                int func(int a=20,int b=20)   //�� ������� �������ԡ�
+                    ········
+                int func(int a=20,int b=20)   //× 将会出现 ‘二义性’
                     return a+b;
-    5.2��������ռλ����
-        �﷨������ֵ���� ���������������ͣ�{}
+    5.2·函数的占位参数
+        语法：返回值类型 函数名（数据类型）{}
         int func(int a,int)
             return a;
-            ע�����
-            1.ռλ����������Ĭ�ϲ���
-1.��������
-    1.1�������صĸ���
-        ���ã�������������ͬ����߸�����
+            注意事项：
+            1.占位参数可以有默认参数
+1.函数重载
+    1.1函数重载的概述
+        作用：函数名可以相同，提高复用性
 
-        ������������������
-            ��ͬһ����������
-            ����������ͬ
-            ���������������Ͳ�ͬ���򡮸�����ͬ�����ߡ�˳��ͬ��
+        函数重载满足条件：
+            ·同一个作用域下
+            ·函数名相同
+            ·函数参数‘类型不同’或‘个数不同’或者‘顺序不同’
 
-        ע�⣺�����ġ�����ֵ����������Ϊ�������ص�����
+        注意：函数的‘返回值’不可以作为函数重载的条件
 
         #.........
         int func(int a,int b);
@@ -101,94 +101,94 @@
         void func(int a,int b);
         int main()
         {
-            func(a,b)//��
-            func(a,b)//��
-            func(b,a)//��
-            func(a,b)//��,�޷����ݷ���ֵ���أ�����������
+            func(a,b)//√
+            func(a,b)//√
+            func(b,a)//√
+            func(a,b)//×,无法根据返回值重载，产生二义性
         }
-    1.2�������ص�ע������
-        1��������Ϊ��������
+    1.2函数重载的注意事项
+        1·引用作为函数重载
         #.........
-        //����ֵ���Ͳ�ͬ������ͨ��
+        //参数值类型不同，编译通过
         void func(int &a);       
         void func(const int &a);
         int main()
         {
             int a=10;
             func(a);
-            //������ void func(int *a),a�Ǳ�������const int &a->ֻ��
+            //将调用 void func(int *a),a是变量，而const int &a->只读
             func(10);
-            //������ void func(const....)��const...�Զ�ת��
+            //将调用 void func(const....)，const...自动转换
             {
                 int temp=10;
                 const int &a=temp;
             }    
-            ��void func(int &a=10)�ǲ��Ϸ���
+            而void func(int &a=10)是不合法的
         }
-        2��������������Ĭ�ϲ���
+        2·函数重载碰到默认参数
         #.........
         void func(int a);
         void func(int a,int b=10);
         int main()
         {
-            //���������ֶ�����
+            //报错，出现二义性
             func(10);
         }
-2.��Ͷ���
-    C++���������������ԣ�����װ���̳С���̬��
-    C++��Ϊ���������ﶼ��Ϊ���󡯣��������������Ժ���Ϊ
+2.类和对象
+    C++面向对象的三大特性：‘封装、继承、多态’
+    C++认为‘万事万物都皆为对象’，对象上有其属性和行为
 
-    ���磺
-        �˿�����Ϊ�������������������䡢����...
-        ������ͬ���ʵĶ������ǿ��Գ����Ϊ�࣬���������ࡢ�����ڳ���
-    2.1��װ
-        2.1.1��װ������
-            ��װ�����壺
-            �������Ժ���Ϊ��Ϊһ�����壬���������е�����
-            �������Ժ���Ϊ����Ȩ�޿���
+    例如：
+        人可以作为对象，属性有姓名、年龄、身高...
+        具有相同性质的对象，我们可以抽象称为类，人属于人类、车属于车类
+    2.1封装
+        2.1.1封装的意义
+            封装的意义：
+            ·将属性和行为作为一个整体，表现生活中的事物
+            ·将属性和行为加以权限控制
 
-            ��װ������һ��
-                ��������ʱ�����Ժ���Ϊд��һ�𣬱�������
-            �﷨��
-                class ����{����Ȩ�ޣ�����/��Ϊ}
-                //���е����Ժ���Ϊͳ��Ϊ����Ա��
-                //����->��Ա���� ��Ա����
-                //��Ϊ->��Ա��Ϊ ��Ա����
+            封装的意义一：
+                在设计类的时候，属性和行为写在一起，表现事物
+            语法：
+                class 类名{访问权限：属性/行为}
+                //类中的属性和行为统称为‘成员’
+                //属性->成员属性 成员变量
+                //行为->成员行为 成员方法
             #.......
             const double PI = 3.14;
             class Circle
             {
-            public:               //����Ȩ��
-                int R;                //����
-                double calculateZC()//��Ϊ
+            public:               //访问权限
+                int R;                //属性
+                double calculateZC()//行为
                 {
                     return 2 * PI * R;
                 }
             };
             int main()
             {
-                Circle c1; //ͨ��Բ�࣬���������Բ������
+                Circle c1; //通过圆类，创建具体的圆（对象）
                 c1.R = 10;
-                cout << "�ܳ���" << c1.calculateZC() << endl;
+                cout << "周长：" << c1.calculateZC() << endl;
             }
 
-            ��װ�������
-            �������ʱ�����԰����Ժ���Ϊ���ڲ�ͬ��Ȩ���£����Կ���
-            ����Ȩ�������֣�
-                1.����Ȩ�� public    //�������ⶼ���Ա�����
-                2.����Ȩ�� protected //���ڿ��Է��ʣ����ⲻ���Է���
-                3.˽��Ȩ�� private   //���ڿ��Է��ʣ����ⲻ���Է���
-        2.1.2class��struct������
-            ��C++����������Ĭ��Ȩ�޲�ͬ��struct->public,class->private
+            封装意义二：
+            类在设计时，可以把属性和行为放在不同的权限下，加以控制
+            访问权限有三种：
+                1.公共权限 public    //在类内外都可以被访问
+                2.保护权限 protected //类内可以访问，类外不可以访问
+                3.私有权限 private   //类内可以访问，类外不可以访问
+        2.1.2class和struct的区别
+            在C++中区别在于默认权限不同：struct->public,class->private
 
-        2.1.3��Ա��������Ϊ˽��
-            �ŵ㣺
-                �������Լ����ƶ�дȨ��
-                ������д���Լ�����ݵ���Ч��
+        2.1.3成员属性设置为私有
+            优点：
+                ·可以自己控制读写权限
+                ·对于写可以检测数据的有效性
                 class humen
                 {
-                //ͨ����������Ϊ���������ܹ��ܺõı���˽������
-                public: //�ɶ���д
+                //通过公共的行为操作属性能够很好的保护私有属性
+                public: //可读可写
                     void setName(string name)
                     {
                         name = name;
@@ -197,13 +197,13 @@
                     {
                         return name;
                     }
-                public: //ֻ��
+                public: //只读
                     int getAge()
                     {
                         return age;
                     }
                 
-                public: //���������Ч��
+                public: //检测数据有效性
                     void setAge(int age)
                     {
                         if (age < 0 || age >100)
@@ -213,7 +213,7 @@
                         }
                         age = age;
                     }
-                public: //ֻд
+                public: //只写
                     void setLover(string lover)
                     {
                         lover = lover;
@@ -229,10 +229,10 @@
                 int main()
                 {
                     humen p;
-                    p.setName("����");
+                    p.setName("张三");
                 }
-        ��װ������
-            //�ֱ��ó�Ա������ȫ�ֺ����ж����������Ƿ���ͬ
+        封装案例：
+            //分别用成员函数和全局函数判断两立方体是否相同
             class Cube
             {
             public:
@@ -298,44 +298,44 @@
                 bool ret1=c1.isSamebyclass(Cube c2);
                 bool ret2=isSamebyGolbal(Cube c1,Cube c2);
             }
-    2.2����ĳ�ʼ��������
-        2.2.1���캯������������
-            ����ġ���ʼ�����������������ǳ���Ҫ�İ�ȫ����
-                һ��������߱���û�г�ʼ״̬������ʹ�ú����δ֪��
-                ͬ����ʹ����һ������������û�м�ʱ������Ҳ�����һ����ȫ����
-            C++���ù��캯����������������������⣬�����������ᱻ�������Զ����ã���ɶ����ʼ������������
-            �����ʼ�������������Ǳ�����ǿ��Ҫ�����������飬���������ǲ��ṩ�����������������Զ����ṩ
-            ���ṩ�Ĺ��캯�������������ǡ���ʵ�֡���û���κδ��룩
+    2.2对象的初始化和清理
+        2.2.1构造函数和析构函数
+            对象的‘初始化和清理’是两个非常重要的安全问题
+                一个对象或者变量没有初始状态，对其使用后果是未知的
+                同样的使用完一个对象或变量，没有及时清理，也会造成一定安全问题
+            C++利用构造函数和析构函数解决上述问题，这两个函数会被编译器自动调用，完成对象初始化和清理工作
+            对象初始化和清理工作是编译器强制要我们做的事情，因此如果我们不提供构造和析构，编译会自动的提供
+            但提供的构造函数和析构函数是‘空实现’（没有任何代码）
             
-                �����캯������Ҫ�������ڴ�������ʱΪ����ĳ�Ա���Ը�ֵ�����캯���ɱ������Զ����ã������ֶ�����
-                ��������������Ҫ�����ڶ�������ǰϵͳ�Զ����ã�ִ��һЩ��������
+                ·构造函数：主要作用在于创建对象时为对象的成员属性赋值，构造函数由编译器自动调用，无须手动调用
+                ·析构函数：主要作用于对象销毁前系统自动调用，执行一些清理工作
             
-            ���캯���﷨������(){}
-            1.���캯����û�з���ֵҲ��дvoid 
-            2.����������������ͬ
-            3.���캯�������в�������˿��Է�������
-            4.�����ڵ��ö���ʱ���Զ����ù��죬�����ֶ�����
+            构造函数语法：类名(){}
+            1.构造函数，没有返回值也不写void 
+            2.函数名称与类名相同
+            3.构造函数可以有参数，因此可以发生重载
+            4.程序在调用对象时候自动调用构造，无须手动调用
 
-            ���������﷨��~����(){}
-            1.����������û�з���ֵҲ��дvoid
-            2.����������������ͬ��������ǰ���Ϸ���~
-            3.�����������������в���������˲����Է�������
-            4.�����ڶ�������ǰ���Զ����������������ֶ�����
+            析构函数语法：~类名(){}
+            1.析构函数，没有返回值也不写void
+            2.函数名称与类名相同，在名称前加上符号~
+            3.析构函数‘不可以有参数’，因此不可以发生重载
+            4.程序在对象销毁前会自动调用析构，无须手动调用
             class Person
             {
             public:
             
                 Person()
                 {
-                    cout << "���캯���ĵ���" << endl;
+                    cout << "构造函数的调用" << endl;
                 }
             
                 ~Person()
                 {
-                    cout << "���������ĵ���" << endl;
+                    cout << "析构函数的调用" << endl;
                 }
             };
-            void test() //����ջ�У���������Զ��ͷţ����������һ�β���
+            void test() //存在栈中，调用完后自动释放，构造和析构一次产生
             {
                 
                 Person p;
@@ -344,205 +344,205 @@
             int main()
             {
                 test();
-                Person p; //�ֲ����������캯�����ã�������رգ�������������
+                Person p; //局部变量，构造函数调用，当程序关闭，析构函数调用
                 system("pause");
                 return 0;
             }
-            CMD��ִ�н����
-                ���캯���ĵ���
-                ���������ĵ���
-                ���캯���ĵ���
-                �밴���������. . .
-                ���������ĵ���
-        2.2.2���캯���ķ��༰����
-            ���ַ��෽ʽ��
-                �Ѳ�����Ϊ���ɲι�����޲Σ�Ĭ�ϣ�����
-            ���ֵ��÷�ʽ��
-                1.���ŷ�
-                2.��ʾ��
-                3.��ʽת����
-            ע�����
-                ���ڵ���Ĭ�Ϲ��캯��ʱ�򣬲�Ҫ��()���ᱻ��������Ϊ�Ǻ������������ᴴ������
-                ����Ҫ���ÿ����������캯������ʼ����������
+            CMD中执行结果：
+                构造函数的调用
+                析构函数的调用
+                构造函数的调用
+                请按任意键继续. . .
+                析构函数的调用
+        2.2.2构造函数的分类及调用
+            两种分类方式：
+                把参数分为：由参构造和无参（默认）构造
+            三种调用方式：
+                1.括号法
+                2.显示法
+                3.隐式转换法
+            注意事项：
+                ·在调用默认构造函数时候，不要加()，会被编译器认为是函数声明将不会创建对象
+                ·不要利用拷贝函数构造函数来初始化匿名对象
                 class Person
                 {
                 public:
-                    //�������޲������ù��캯��
+                    //按照有无参数调用构造函数
                     Person()
                     {
-                        cout << "�޲ι��캯���ĵ���" << endl;
+                        cout << "无参构造函数的调用" << endl;
                     }
                     Person(int a)
                     {
                         age = a;
-                        cout << "�вι��캯���ĵ���" << endl;
+                        cout << "有参构造函数的调用" << endl;
                     }
-                    //�������캯��
+                    //拷贝构造函数
                     Person(const Person &p)
                     {
-                        //������������ϵ��������ԣ���������������
+                        //将传入的人身上的所有属性，拷贝到本人身上
                         age = p.age;
                     }
                 
                     int age;
                 };
-                //����
+                //调用
                 void test01()
                 {
-                    //1.���ŷ�����
-                    Person p1;     //Ĭ�ϣ��޲Σ�����
-                    Person p2(10); //�в�
-                    Person p3(p2); //�������캯��
-                    //Person p1();    ���ᱻ��Ϊ�������������ᴴ������
+                    //1.括号法调用
+                    Person p1;     //默认（无参）参数
+                    Person p2(10); //有参
+                    Person p3(p2); //拷贝构造函数
+                    //Person p1();    将会被认为函数声明，不会创建对象
                 
-                    //2.��ʾ������
+                    //2.显示法调用
                     Person p1;
-                    Person p2 = Person(10);//�в�
-                    Person p3 = Person(p2);//����
+                    Person p2 = Person(10);//有参
+                    Person p3 = Person(p2);//拷贝
                 
-                    Person(10); //�������� �ص㣺��ǰ��ִ�н�����ϵͳ������������������
-                    //Person(p3);//����������ΪPerson (p3) === Person p3; �����������ᱻ��Ϊ�ض��壬���ÿ�����
+                    Person(10); //匿名对象 特点：当前行执行结束后，系统会立即回收匿名对象
+                    //Person(p3);//编译器会认为Person (p3) === Person p3; 对象声明，会被认为重定义，利用拷贝×
                     
-                    //3.��ʽת����
-                    Person p4 = 10;//�൱��д��Person p4= Person (10)
-                    Person p5 = p4;//�൱��д��Person p5= Person (p4)
+                    //3.隐式转换法
+                    Person p4 = 10;//相当于写了Person p4= Person (10)
+                    Person p5 = p4;//相当于写了Person p5= Person (p4)
                 }
                 int main()
                 {
                     test01();
                 }
-        2.2.3�������캯������ʱ��
-            C++�п������캯������ʱ��ͨ�����������
-            ��ʹ��һ�����Ѿ�������ϡ��Ķ���������ʼ��һ���¶���
-            ����ֵ���ݡ��ķ�ʽ������������ֵ
-            ���ԡ�ֵ��ʽ�����ؾֲ�����
-        2.2.4���캯�����ù���
-            Ĭ�����,C++���������ٸ�һ��������3������
-            1.Ĭ�Ϲ��캯�����޲Σ�������Ϊ�գ�
-            2.Ĭ�������������޲Σ�������Ϊ�գ�
-            2.Ĭ�Ͽ������캯���������Խ���ֵ����
+        2.2.3拷贝构造函数调用时机
+            C++中拷贝构造函数调用时机通常有三种情况
+            ·使用一个‘已经创建完毕’的对象来‘初始化一个新对象’
+            ·‘值传递’的方式给函数参数传值
+            ·以‘值方式’返回局部对象
+        2.2.4构造函数调用规则
+            默认情况,C++编译器至少给一个类添加3个函数
+            1.默认构造函数（无参，函数体为空）
+            2.默认析构函数（无参，函数体为空）
+            2.默认拷贝构造函数，对属性进行值拷贝
             
-            ������û������вι��캯����C++��
-                1.���ṩ 2.�ṩ 3.�ṩ
-            ������û����忽�����캯����C++��
-                1.���ṩ 2.���ṩ 3.���ṩ
-        2.2.5�����ǳ����
-            ǳ�������򵥵ĸ�ֵ��������
-            �����������������ռ䣬���п�������
-            ǳ���������������ǡ������ظ��ͷš�
-            ��������ٶ��������ٿ����µ��ڴ����ظ��ͷ�
-            ���µķǷ���������
+            ·如果用户定义有参构造函数，C++：
+                1.不提供 2.提供 3.提供
+            ·如果用户定义拷贝构造函数，C++：
+                1.不提供 2.不提供 3.不提供
+        2.2.5深拷贝和浅拷贝
+            浅拷贝：简单的赋值拷贝操作
+            深拷贝：堆区重新申请空间，进行拷贝操作
+            浅拷贝带来的问题是‘堆区重复释放’
+            利用深拷贝再堆区重新再开辟新的内存解决重复释放
+            导致的非法操作问题
             class Person
             {
             public:
                 Person()
                 {
-                    cout << "Ĭ�Ϲ��캯������" << endl;
+                    cout << "默认构造函数调用" << endl;
                 }
                 Person(int age,int m_height)
                 {
                     m_Age = age;
                     m_Height = new int(m_height);
-                    cout << "�вι��캯������" << endl;
+                    cout << "有参构造函数调用" << endl;
                 }
-                //�������ṩ�Ŀ���������ֻ����ǳ������
+                //编译器提供的拷贝函数‘只会做浅拷贝’
                 Person(const Person &p)
                 {
-                    cout << "�������캯������" << endl;
+                    cout << "拷贝构造函数调用" << endl;
                     m_Age = p.m_Age;
                     m_Height = new int(*p.m_Height);
                 }
                 ~Person()
                 {
-                    //�ͷŶ�������
+                    //释放堆区内容
                     if (m_Height != NULL)
                     {
                         delete m_Height;
                         m_Height = NULL;
                     }
-                    cout << "������������" << endl;
+                    cout << "析构函数调用" << endl;
                 }
                 int m_Age;
                 int *m_Height;
             };
-        2.2.6��ʼ���б�
-            ���ã��ṩ��ʼ���б��﷨��������ʼ������
-            �﷨�����캯��():����1(),����2(),����3()...{}
+        2.2.6初始化列表
+            作用：提供初始化列表语法，用来初始化属性
+            语法：构造函数():属性1(),属性2(),属性3()...{}
             class Person
             {
             public:
-            //��ʽת����
+            //隐式转换法
                 Person(int a,int b,int c):m_a(a),m_b(b),m_c(c){}
             int m_a;
             int m_b;
             int m_c;
             }
-        2.2.7�������Ϊ���Ա
-            C++���еĳ�Ա��������һ����Ķ���
+        2.2.7类对象作为类成员
+            C++类中的成员可以是另一个类的对象
             class A{};
             class B
             {
                 A a;
             };
-        2.2.8��̬��Ա
-            ��̬��Ա�����ڳ�Ա�����ͳ�Ա����ǰ���Ϲؼ���Static
-            ��̬��Ա��Ϊ��
-                ����̬��Ա����
-                    1.���ж�����ͬһ������
-                    2.�ڱ���׶η����ڴ�   //�ڱ����ڴ�ʱ���䣨����δ���У�
-                    3.���������������ʼ��
+        2.2.8静态成员
+            静态成员就是在成员变量和成员函数前加上关键字Static
+            静态成员分为：
+                ·静态成员变量
+                    1.所有对象共享同一份数据
+                    2.在编译阶段分配内存   //在编译内存时分配（程序未运行）
+                    3.类内声明，类外初始化
                 class Person
                 {
                 public:
-                    static int a;   //��������
+                    static int a;   //类内声明
                 };
-                ע�����
-                    ��̬��Ա����������ĳ���������ж�����ͬһ������
-                    ��̬��Ա�����з���Ȩ��
-                ���ʾ�̬��Ա���������ַ�ʽ��
-                    1.ͨ������ 2.ͨ������
+                注意事项：
+                    静态成员变量不属于某个对象，所有对象共享同一份数据
+                    静态成员变量有访问权限
+                访问静态成员变量有两种方式：
+                    1.通过对象 2.通过类名
                         1.Person p;
                             p.a; 
                         2.Person::a;
-                int Person::a=100;  //�����ʼ��
-                ����̬��Ա����
-                    1.���ж�����ͬһ������
-                    2.��̬��Ա������ֻ�ܷ��ʡ�����̬��Ա������
+                int Person::a=100;  //类外初始化
+                ·静态成员函数
+                    1.所有对象共享同一个函数
+                    2.静态成员函数‘只能访问’‘静态成员变量’
                 class Person
                 {
                 public:
-                    static void func(int a);   //��������
+                    static void func(int a);   //类内声明
                 }; 
-                ע������:
-                    1.��̬��Ա����������ĳ���������ж�����ͬһ�ݺ���
-                    2.��̬��Ա�����з���Ȩ�� 
-                ���ʾ�̬��Ա���������ַ�ʽ��
-                1.ͨ������ 2.ͨ������
+                注意事项:
+                    1.静态成员函数不属于某个对象，所有对象共享同一份函数
+                    2.静态成员函数有访问权限 
+                访问静态成员变量有两种方式：
+                1.通过对象 2.通过类名
                     1.Person p;
                         p.func(); 
                     2.Person::func();
-    2.3C++����ģ�ͺ�thisָ��
-        2.3.1��Ա�����ͳ�Ա�����ֿ��洢
-            ��C++�У����ڵĳ�Ա�����ͳ�Ա�����ֱ�洢
-            ֻ�зǾ�̬��Ա������������Ķ�����
-            C++���������ÿ���ն������1���ڴ棬Ϊ�����ֿն���ռ�ڴ��λ��
-            ÿ���ն����ж�һ�޶����ڴ��ַ
-            ֻ�зǾ�̬��Ա����������Ķ��󣬳���֮�⾲̬��Ա���Ǿ�̬�����;�̬������������
-        2.3.2thisָ�����
-            thisָ��ָ�򱻵��õĳ�Ա���������Ķ���
-            thisָ����������ÿһ���Ǿ�̬��Ա�����ڵ�һ��ָ��
-            thisָ�벻��Ҫ���壬ֱ��ʹ�ü���
+    2.3C++对象模型和this指针
+        2.3.1成员变量和成员函数分开存储
+            在C++中，类内的成员变量和成员函数分别存储
+            只有非静态成员变量才属于类的对象上
+            C++编译器会给每个空对象分配1个内存，为了区分空对象占内存的位置
+            每个空对象都有独一无二的内存地址
+            只有非静态成员变量属于类的对象，除此之外静态成员、非静态函数和静态函数都不属于
+        2.3.2this指针概念
+            this指针指向被调用的成员函数所属的对象
+            this指针是隐含在每一个非静态成员函数内的一种指针
+            this指针不需要定义，直接使用即可
 
             class Person
             {
             public:
-                //������Ƴ�ͻ
+                //解决名称冲突
                 Person(int age)
                 {
-                    //this ָ�򱻵��ó�Ա���������Ķ���
+                    //this 指向被调用成员函数所属的对象
                     this->age = age;
                 }
-                //Ҫ���ر������������÷���&
+                //要返回本体必须加上引用符号&
                 Person& PersonAddAge(Person& p)
                 {
                     this->age += p.age;
@@ -553,24 +553,24 @@
             void test1()
             {
                 Person p1(18);
-                cout << "p1������Ϊ��" << p1.age << endl;
+                cout << "p1的年龄为：" << p1.age << endl;
             }
             void test2()
             {
                 Person p1(10);
                 Person p2(10);
-                //��ʽ���˼��
+                //链式编程思想
                 p2.PersonAddAge(p1).PersonAddAge(p1);
-                cout << "p2������Ϊ��" << p2.age << endl;
+                cout << "p2的年龄为：" << p2.age << endl;
             }
-        2.3.3��ָ����ʳ�Ա����
-            C++�п�ָ��Ҳ�ǿ��Ե��ó�Ա����������ҲҪע����û���õ�thisָ��
-            ����õ�thisָ�룬��Ҫ�жϳ���Ľ�׳��
+        2.3.3空指针访问成员函数
+            C++中空指针也是可以调用成员函数，但是也要注意有没有用到this指针
+            如果用到this指针，需要判断程序的健壮性
             class Person
             {
                 void showPersonAge()
                 {
-                    //Ϊ��ȷ������׳�ԣ���Ҫ�Ľ������´���
+                    //为了确保程序健壮性，需要改进成以下代码
                     if(this==NULL)
                         return ;
                     cout<<"age= "<<m_Age<<endl;   m_Age (this->m_Age)
@@ -580,27 +580,27 @@
             void test1()
             {
                 Person *p1=NULL;
-                p1->showPersonAge() //���򽫳���,����if������������
+                p1->showPersonAge() //程序将出错,加入if条件语句后正常
             }
-        2.3.4const���γ�Ա����
-            ��������
-                ����Ա�������const�����ǳ�Ϊ�������Ϊ������
-                ���������ڲ������޸ĳ�Ա����
-                ����Ա��������ʱ�ӹؼ���mutable���ڳ���������Ȼ�����޸�
-            ������
-                ����������ǰ��const�Ƹö���Ϊ������
-                ��������ֻ�ܵ��ó�����
+        2.3.4const修饰成员函数
+            常函数：
+                ·成员函数后加const后我们称为这个函数为常函数
+                ·常函数内不可以修改成员属性
+                ·成员属性声明时加关键字mutable后，在常函数中依然可以修改
+            常对象：
+                ·声明对象前加const称该对象为常对象
+                ·常对象只能调用常函数
                 class Person
                 {
                 public:
                     /*
-                        thisָ��ı�����ָ�볣��������ָ���ָ�����޷��޸ĵ�
+                        this指针的本质是指针常量，所以指针的指向是无法修改的
                         Person * const this
                     */
-                    //��ɳ�������ʵ��Ϊ->cosnt Person* const this 
+                    //变成常函数后实质为->cosnt Person* const this 
                     void showPerson() const
                     {
-                        //m_A = 100;   //this->m_A=100 ; �����������޷�������
+                        //m_A = 100;   //this->m_A=100 ; 常函数中是无法操作的
                         m_B = 100;
                     }
                     void showPerson1()
@@ -615,18 +615,18 @@
                     const Person p1;
                     //p1.m_A = 100;
                     p1.m_B = 100;
-                    //p1.showPerson1();  //������ֻ�ܵ��ó�����
+                    //p1.showPerson1();  //常对象只能调用常函数
                 }
-    2.4��Ԫ
-        �ڳ������Щ˽�����ԣ�Ҳ�������������һЩ������������������ʣ�����Ҫ�õ���Ԫ
-        ��Ԫ��Ŀ�ľ�����һ�����������࣬������һ������˽�г�Ա
-        �ؼ��֣���friend��
+    2.4友元
+        在程序里，有些私有属性，也想让类外特殊的一些函数或者类来特殊访问，就需要用到友元
+        友元的目的就是让一个函数或者类，访问另一个类中私有成员
+        关键字：‘friend’
 
-        ��Ԫ����������ʵ��
-            ��ȫ�ֺ�������Ԫ
-            ��������Ԫ
-            ����Ա��������Ԫ
-            class Building; //��ǰ������Building ��ôһ����
+        友元的三种三种实现
+            ·全局函数做友元
+            ·类做友元
+            ·成员函数做友元
+            class Building; //提前声明有Building 这么一个类
             class GoodFriend
             {
             public:
@@ -647,11 +647,11 @@
             
             class Building
             {
-                //ȫ�ֺ�������Ԫ
+                //全局函数做友元
                 friend void friend_visit(Building* building);
-                //������Ԫ
+                //类做友元
                 friend class GoodFriend;
-                //���Ա��������Ԫ
+                //类成员函数做友元
                 friend void GoodFriend_1::visit1();
             public:
                 Building();
@@ -662,13 +662,13 @@
             };
             void friend_visit(Building* building)
             {
-                cout << "�������ڷ��ʣ�" << building->m_sittingRoom << endl;
-                cout << "�������ڷ��ʣ�" << building->m_BedRoom<< endl;
+                cout << "朋友正在访问：" << building->m_sittingRoom << endl;
+                cout << "朋友正在访问：" << building->m_BedRoom<< endl;
             }
             Building::Building()
             {
-                this->m_sittingRoom = "����";
-                this->m_BedRoom = "����";
+                this->m_sittingRoom = "客厅";
+                this->m_BedRoom = "卧室";
             }
             GoodFriend::GoodFriend()
             {
@@ -680,19 +680,19 @@
             }
             void GoodFriend::visit()
             {
-                cout << "���������ڷ��ʣ�" << building->m_BedRoom << endl;
-                cout << "���������ڷ��ʣ�" << building->m_sittingRoom << endl;
+                cout << "好朋友正在访问：" << building->m_BedRoom << endl;
+                cout << "好朋友正在访问：" << building->m_sittingRoom << endl;
             }
             void  GoodFriend_1::visit1()
             {
-                cout << "�������ڷ��ʣ�" << building1->m_sittingRoom << endl;
-                cout << "�������ڷ��ʣ�" << building1->m_BedRoom << endl;
+                cout << "朋友正在访问：" << building1->m_sittingRoom << endl;
+                cout << "朋友正在访问：" << building1->m_BedRoom << endl;
             }
             void GoodFriend_1::visit2()
             {
-                //GooFriend_1���ຯ��visit2()��Ȩ����Building����Ԫ����Ȩ��������
-                cout << "�������ڷ��ʣ�" << building1->m_sittingRoom << endl;
-                //cout << "�������ڷ��ʣ�" << building1->m_BedRoom << endl;
+                //GooFriend_1的类函数visit2()无权不是Building的友元，无权访问卧室
+                cout << "朋友正在访问：" << building1->m_sittingRoom << endl;
+                //cout << "朋友正在访问：" << building1->m_BedRoom << endl;
             }
             void test1()
             {
@@ -703,13 +703,13 @@
                 GoodFriend_1 Tom;
                 Tom.visit1();
             }
-    2.5���������
-        ��������е���������½��ж��壬��������һ�ֹ��ܣ�����Ӧ��ͬ����������
-        2.5.1�Ӻ����������
+    2.5运算符重载
+        概念：对已有的运算符重新进行定义，赋予其另一种功能，以适应不同的数据类型
+        2.5.1加号运算符重载
             class Operator
             {
             public:
-                //1.��Ա�������������
+                //1.成员函数重载运算符
                 /*
                         Operator operator+(Operator p)
                 {
@@ -724,7 +724,7 @@
                 int m_a;
                 int m_b;
             };
-            //2.ȫ�ֺ������������
+            //2.全局函数重载运算符
             Operator operator+(Operator& p,Operator& p1)
             {
                 Operator temp;
@@ -739,16 +739,16 @@
                 p2.m_a = 10;
                 p1.m_b = 20;
                 p2.m_b = 20;
-                //1.��Ա��������������ı��ʣ�Operator p3 = p1.operator+(p2);
-                //2.ȫ�ֺ�������������ı��ʣ�Operator p3 = operator+(p1,p2);
-                //3.�����Ҳ���Է�����������
+                //1.成员函数重载运算符的本质：Operator p3 = p1.operator+(p2);
+                //2.全局函数重载运算符的本质：Operator p3 = operator+(p1,p2);
+                //3.运算符也可以发生函数重载
                 Operator p3 = p1 + p2;
                 cout << "p3.m_a=" << p3.m_a << endl;
                 cout << "p3.m_b=" << p3.m_b << endl;
             }
-            �ܽ�1���������õ��������͵ı���ʽ��������޷�����
-            �ܽ�2����Ҫ�������������->�ӱ��
-        2.5.2�������������
+            总结1：对于内置的数据类型的表达式的运算符无法更改
+            总结2：不要滥用运算符重载->加变乘
+        2.5.2左移运算符重载
             class Person
             {
                 friend ostream& operator<< (ostream & cout, Person p1);
@@ -758,40 +758,40 @@
                 int m_a=10;
                 int m_b=10;
             };
-            //1.ȫ�ֺ����������������
+            //1.全局函数重载左移运算符
             ostream& operator<<(ostream&cout,Person p1)
             {
-                //��ʽ���
+                //链式编程
                 cout << p1.m_a ;
                 return cout;
             }
-            ע�����
-                ostream����ֻ����һ��
-        2.5.3����&�ݼ����������
+            注意事项：
+                ostream对象只能有一个
+        2.5.3递增&递减运算符重载
             class MyIniteger
             {
                 friend ostream& operator<<(ostream& cout, MyIniteger p);
             public:
-                //1.����ǰ��++�����������������Ϊ��һֱ��һ�����ݲ���
+                //1.重载前置++运算符，返回引用是为了一直对一个数据操作
                 MyIniteger& operator++()
                 {
                     ++m_a;
                     return *this;
                 }
-                //1.1����ǰ�������--
+                //1.1重载前置运算符--
                 MyIniteger& operator--()
                 {
                     --m_a;
                     return *this;
                 }
-                //2.���غ���++�������int ����ռλ��������������ǰ�úͺ���,����ֵ
+                //2.重载后置++运算符，int 代表占位参数，可以区分前置和后置,返回值
                 MyIniteger operator++(int)
                 {
                     MyIniteger temp = *this;
                     m_a++;
-                    return temp;    //�ֲ�������ʩ�����ûᵼ�·Ƿ�����
+                    return temp;    //局部变量，施加引用会导致非法访问
                 }
-                //2.2���غ��������--
+                //2.2重载后置运算符--
                 MyIniteger operator--(int)
                 {
                     MyIniteger temp = *this;
@@ -815,13 +815,13 @@
                     cout << "m_a-- : " << p1-- << endl;
                     cout << p1 << endl;
                 }
-        2.5.4��ֵ���������
-            C++���������ٸ�һ��������4������
-            1.Ĭ�Ϲ���
-            2.Ĭ�Ϲ��죨�вΣ�
-            3.��������
-            4.��ֵ�����operator=�������Խ���ֵ����
-            �������������ָ���������ô���漰��ǳ����������
+        2.5.4赋值运算符重载
+            C++编译器至少给一个类添加4个函数
+            1.默认构造
+            2.默认构造（有参）
+            3.拷贝函数
+            4.赋值运算符operator=，对属性进行值拷贝
+            如果类中有属性指向堆区，那么会涉及深浅拷贝的问题
             class Person
             {
             public:
@@ -831,7 +831,7 @@
                 }
                 Person& operator=(Person& p)
                 {
-                    //���ж��Ƿ��������ڶ���������������ͷ�
+                    //先判断是否有属性在堆区，如果有则先释放
                     if (m_Age != NULL)
                     {
                         delete m_Age;
@@ -854,22 +854,22 @@
             {
                 Person p1(18);
                 Person p2(20);
-                //Person p3 = p2 = p1;//p3�������ڴ��p2��һ��
+                //Person p3 = p2 = p1;//p3的年龄内存和p2的一样
                 Person p3(20);
                 p3 = p1 = p2;
-                cout << "p3 �����䣺" << *p3.m_Age << endl;
+                cout << "p3 的年龄：" << *p3.m_Age << endl;
             }
-        2.5.5��ϵ���������
-            �������Զ������Ͷ�����жԱȲ���
+        2.5.5关系运算符重载
+            让两个自定义类型对象进行对比操作
             bool operator==(Person& p)
             {
                 if(...)
                     return true/false;
                 return false/true;
             }
-        2.5.6�����������������
-            ���غ�ʹ�õķ�ʽ�ǳ��������ã����Ա���Ϊ�º���
-            �������� operator()(�������� �βΣ�...)
+        2.5.6函数调用运算符重载
+            重载后使用的方式非常像函数调用，所以被称为仿函数
+            返回类型 operator()(数据类型 形参，...)
             class ....
             {
             public:
@@ -882,13 +882,13 @@
             {
                 ... Myprint;
                 Myprint(int a);
-                ...()(int a);   //���������������꼰�ͷ�
+                ...()(int a);   //匿名函数对象，用完及释放
             }
-    2.6�̳�
-        2.6.1�̳еĻ����﷨
-            ӵ�и��๲�ԣ�Ҳӵ������������
-            �﷨��class ���� :�̳з�ʽ ����
-            ����Ҳ��Ϊ�����࣬����Ҳ��Ϊ����
+    2.6继承
+        2.6.1继承的基本语法
+            拥有父类共性，也拥有自身的特性
+            语法：class 子类 :继承方式 父类
+            子类也称为派生类，父类也称为基类
             class BassPage
             {
             public:
@@ -899,22 +899,22 @@
             {
             public:
             }
-        2.6.2�̳з�ʽ
-            �������̳�
-            �������̳�
-            ��˽�м̳�
-        2.6.3�̳��еĶ���ģ��
-            ���������зǾ�̬��Ա���Զ��ᱻ����̳�
-            ������˽�г�Ա�����Ǳ����������أ���˷��ʲ���
-            ��vs�Ŀ�����Ա������ʾ����
-            F��//��ת�̷�
-            cd ����·�� //�л�·��
-            cl /d1 reportSingleClassLayout���� �ļ���(Tab��ȫ) //���浥����ģ��
-        2.6.4�̳��й��������˳��
-            �ȹ��츸���ٹ������࣬��������������������
-        2.6.5�̳���ͬ����Ա������ʽ
-            ����������ͬ����Ա ֱ�ӷ��ʼ���
-            �����ʸ���ͬ����Ա ��Ҫ����������
+        2.6.2继承方式
+            ·公共继承
+            ·保护继承
+            ·私有继承
+        2.6.3继承中的对象模型
+            父类中所有非静态成员属性都会被子类继承
+            父类中私有成员属性是被编译器隐藏，因此访问不到
+            打开vs的开发人员命令提示工具
+            F：//跳转盘符
+            cd 具体路径 //切换路径
+            cl /d1 reportSingleClassLayout类名 文件名(Tab补全) //报告单个类模型
+        2.6.4继承中构造和析构顺序
+            先构造父类再构造子类，先析构子类再析构父类
+        2.6.5继承中同名成员处理方式
+            ·访问子类同名成员 直接访问即可
+            ·访问父类同名成员 需要添加作用域
             class Bass
             {
             public:
@@ -924,7 +924,7 @@
                 }
                 void func()
                 {
-                    cout<<"�������"<<endl;
+                    cout<<"父类调用"<<endl;
                 }
                 int m_a;
             };
@@ -937,7 +937,7 @@
                 }
                 void func()
                 {
-                    cout<<"�������"<<endl;
+                    cout<<"子类调用"<<endl;
                 }
                 int m_a;
             };
@@ -949,54 +949,54 @@
                 p1.func();
                 p1.Bass::func();
             }
-        2.6.6�̳�ͬ����̬��Ա������ʽ
-            ����������ͬ����̬��Ա ֱ�ӷ��ʼ���
-            �����ʸ���ͬ����̬��Ա ��Ҫ����������
-            ͬ����̬��Ա������ʽ�ͷǾ�̬������ʽһ����ֻ���������ַ��ʵķ�ʽ
-            ͨ�������Ͷ���
-        2.6.7��̳��﷨
-            C++����һ����̳ж����
-            �﷨��class ���� : �̳з�ʽ ����1,�̳з�ʽ ����2...
-            �������г���ͬ����Ա������ʹ��ʱ��Ҫ������������
-        2.6.8���μ̳�
-            ����������̳�ͬһ�����࣬����ĳ����ͬʱ�̳�������������
-            ���ּ̳б���Ϊ���μ̳л���ʯ�̳�
-            ���μ̳е����⣺
-                       ����
-                     ��    ��
-                       ����
-            1.������->ͬ������ 2.�ظ����ݵļ̳�->���ջ�̳����ݶ�������ݣ���Դ�˷�
-            ���������
-            1.���������� 2.������̳У��̳�֮ǰ���Ϲؼ���virtual,sheep : virtual public animal{};
-    2.7��̬
-        2.7.1��̬�Ļ�������
-            ��̬��Ϊ����  ��������̬��
-                ����̬��̬���������غ����������
-                ����̬��̬����������麯��ʵ������ʱ��̬
-            ��̬��̬�Ͷ�̬��̬����
-                ����̬��̬�ĺ�����ַ����󶨡�
-                ����̬��̬�ĺ�����ַ�����󶨡�
-            ��̬��̬��������
-                1.�м̳й�ϵ
-                2.������д����ġ��麯����
-            ��̬��̬ʹ��
-                �������ָ��������� ִ���������
+        2.6.6继承同名静态成员处理方式
+            ·访问子类同名静态成员 直接访问即可
+            ·访问父类同名静态成员 需要添加作用域
+            同名静态成员处理方式和非静态处理方式一样，只不过有两种访问的方式
+            通过类名和对象
+        2.6.7多继承语法
+            C++允许一个类继承多个类
+            语法：class 子类 : 继承方式 父类1,继承方式 父类2...
+            当父类中出现同名成员，子类使用时需要加作用域区分
+        2.6.8菱形继承
+            两个派生类继承同一个基类，又有某个类同时继承这两个派生类
+            这种继承被称为菱形继承或钻石继承
+            菱形继承的问题：
+                       动物
+                     羊    驼
+                       羊驼
+            1.二义性->同名问题 2.重复数据的继承->羊驼会继承两份动物的数据，资源浪费
+            解决方法：
+            1.利用作用域 2.利用虚继承，继承之前加上关键字virtual,sheep : virtual public animal{};
+    2.7多态
+        2.7.1多态的基本概念
+            多态分为两类  （多种形态）
+                ·静态多态：函数重载和运算符重载
+                ·动态多态：派生类和虚函数实现运行时多态
+            静态多态和动态多态区别：
+                ·静态多态的函数地址‘早绑定’
+                ·动态多态的函数地址‘晚绑定’
+            动态多态满足条件
+                1.有继承关系
+                2.子类重写父类的‘虚函数’
+            动态多态使用
+                ‘父类的指针或者引用 执行子类对象’
             class Animal
             {
             public:
-                //�麯��
+                //虚函数
                 virtual void speak()
                 {
-                    cout << "������˵��" << endl;
+                    cout << "动物在说话" << endl;
                 }
             };
             class Cat:public Animal
             {
             public:
-                //��д ��������ֵ���� ������ �����б���Ҫ��ȫ��ͬ
+                //重写 函数返回值类型 函数名 参数列表需要完全相同
                 void speak()
                 {
-                    cout << "Сè��˵��" << endl;
+                    cout << "小猫在说话" << endl;
                 }
             };
             class Dog :public Animal
@@ -1004,13 +1004,13 @@
             public:
                 void speak()
                 {
-                    cout << "С����˵��" << endl;
+                    cout << "小狗在说话" << endl;
                 }
             };
-            //��ַ��󶨣��ڱ���׶�ȷ��������ַ
-            //�����ִ����è˵������ô���������ַ�Ͳ�����ǰ�󶨣���Ҫ�õ���̬��̬,��ַ����
-            //���ڶ����������virtual
-            //��̬��̬��ʹ�ã������ָ��������� ִ���������
+            //地址早绑定，在编译阶段确定函数地址
+            //如果想执行让猫说话，那么这个函数地址就不能提前绑定，需要用到动态多态,地址晚绑定
+            //即在动物类出加上virtual
+            //动态多态的使用：父类的指针或者引用 执行子类对象
             void doSpeak(Animal& animal)//Animal &animal=cat
             {
                 animal.speak();
@@ -1023,18 +1023,18 @@
                 Dog dog;
                 doSpeak(dog);
             }
-            2.7.1.1��̬����������
-                ��ͼ��
-        2.7.2��̬����һ.��������
-            ��̬���ŵ㣺
-                ��������֯�ṹ����
-                ���ɶ���ǿ
-                ������ǰ�ںͺ��ڵ���չ�Լ�ά��
-            ������ԭ�򣺶���չ���п��������޸Ľ��йرա�
+            2.7.1.1多态的深入剖析
+                看图例
+        2.7.2多态案例一.计算器类
+            多态的优点：
+                ·代码组织结构清晰
+                ·可读性强
+                ·利于前期和后期的扩展以及维护
+            ‘开闭原则：对扩展进行开发，对修改进行关闭’
             class AbastractCaculator
             {
             public:
-                //�麯��
+                //虚函数
                 virtual int getResult()
                 {
                     return 0;
@@ -1068,12 +1068,12 @@
             };
             void test1()
             {
-                //����һ���ӷ�������
+                //创建一个加法计算器
                 AbastractCaculator* abc = new AddCaculator;
                 abc->m_Num1 = 10;
                 abc->m_Num2 = 10;
                 cout << abc->getResult() << endl;
-                //����ǵ�����
+                //用完记得销毁
                 delete abc;
                 abc = new SubstrationCaculator;
                 cout << abc->getResult() << endl;
@@ -1084,16 +1084,16 @@
                 cout << abc->getResult() << endl;
                 delete abc;
             }
-        2.7.3���麯���ͳ�����
-            �ڶ�̬�У�ͨ���������麯����ʵ��ʱ��������ģ���Ҫ���ǵ��á�������д�����ݡ�
-            ��˿��Խ��麯����Ϊ���麯��
-            �﷨��virtual ����ֵ���� �������������б��� = 0��
+        2.7.3纯虚函数和抽象类
+            在多态中，通常父类中虚函数的实现时毫无意义的，主要都是调用‘子类重写的内容’
+            因此可以将虚函数改为纯虚函数
+            语法：virtual 返回值类型 函数名（参数列表） = 0；
                 virtual void func()=0;
-            ���������˴��麯���������Ҳ��Ϊ������
-            �������ص㣺  
-                �����޷���ʵ��������->ջ�ϲ����ԣ�����Ҳ�����Դ����ڴ�
-                �����࡮������д���������еĴ��麯������ȻҲ�ǳ�����
-        2.7.4��̬������.������Ʒ
+            当类中有了纯虚函数，这个类也称为抽象类
+            抽象类特点：  
+                ·‘无法’实例化对象->栈上不可以，堆区也不可以创建内存
+                ·子类‘必须重写’抽象类中的纯虚函数，不然也是抽象类
+        2.7.4多态案例二.制作饮品
             class AbastractDrinking
             {
             public:
@@ -1114,22 +1114,22 @@
             public:
                 virtual void Boil()
                 {
-                    cout << "��ˮ ũ��ɽȪ" << endl;
+                    cout << "煮水 农夫山泉" << endl;
                 }
                 virtual void Brew() 
                 {
-                    cout << "���ݿ���" << endl;
+                    cout << "冲泡咖啡" << endl;
                 }
                 virtual void PourInCup() 
                 {
-                    cout << "���뿧��" << endl;
+                    cout << "倒入咖啡" << endl;
                 }
                 virtual void AddInotherthing()
                 {
-                    cout << "����ţ��" << endl;
+                    cout << "加入牛奶" << endl;
                 }
             };
-            //��������
+            //工作函数
             void doWork(AbastractDrinking* abs)
             {
                 abs->MakeDrink();
@@ -1138,25 +1138,25 @@
             {
                 doWork(new  MakeCoffee);
             }
-        2.7.5�������ʹ�������
-            ��̬ʹ��ʱ����������������Կ��ٵ���������ô����ָ���ڡ��ͷ�ʱ���޷����õ��������������
-            ����������������е�����������Ϊ�������������ߴ�������
+        2.7.5虚析构和纯虚析构
+            多态使用时，如果子类中有属性开辟到堆区，那么父类指针在‘释放时’无法调用到子类的析构代码
+            解决方法：将父类中的析构函数改为‘虚析构’或者纯虚析构
 
-            �������ʹ����������ԣ�
-                �����Խ������ָ���ͷ��������
-                ������Ҫ�о���ĺ���ʵ��
-            �������ʹ�����������
-                ������Ǵ����������������ڳ����࣬�޷�ʵ��������
-            �������﷨��
-                virtual ~����(){}
-            ���������﷨��
-                virtual ~����()=0;
-                ����::~����(){}    ���������Ҫд��ʵ�֣�
-            �ܽ᣺
-                1.�����������������������������ָ���ͷ��������
-                2.���������û�ж������ݣ����Բ�д��������������
-                3.ӵ�д�����������Ҳ���ڳ�����
-        2.7.6��̬������.������װ
+            虚析构和纯虚析构共性：
+                ·可以解决父类指针释放子类对象
+                ·都需要有具体的函数实现
+            虚析构和纯虚析构区别：
+                ·如果是纯虚析构，该类属于抽象类，无法实例化对象
+            虚析构语法：
+                virtual ~类名(){}
+            纯虚析构语法：
+                virtual ~类名()=0;
+                类名::~类名(){}    （类外必须要写的实现）
+            总结：
+                1.虚析构或纯虚析构就是用来解决父类指针释放子类对象
+                2.如果子类中没有堆区数据，可以不写虚析构或纯虚析构
+                3.拥有纯虚析构的类也属于抽象类
+        2.7.6多态案例三.电脑组装
             class Abstraction_Cpu
             {
             public:
@@ -1231,7 +1231,7 @@
                     MEM = m_Memory;
                 }
                 */
-                //�вι���
+                //有参构造
                 Abstraction_Computer(Abstraction_Cpu* m_Cpu, Abstraction_Gpu* m_Gpu, Abstraction_Memory* m_Memory)
                 {
                     CPU = m_Cpu;
@@ -1276,39 +1276,39 @@
                 com1->doWork();
                 delete com1;
             }
-3.�ļ��Ĳ���
-    ��������ʱ���������ݶ�������ʱ���ݣ�����һ�����н������ᱻ�ͷ�
-    ͨ���ļ����Խ����ݳ־û�
-    C++�ж��ļ�������Ҫ����ͷ�ļ�<fstream>���ļ�����
-    �ļ����ͷ�Ϊ����
-        1.�ı��ļ� - �ļ����ı���ASCII����ʽ���ڼ����
-        2.�������ļ� - �ļ����ı��Ķ�������ʽ�洢�ڼ������
-    �����ļ��������ࣺ
-        1.ofstream��д����
-        2.ifstream��������
-        3.fstream ����д����
-    3.1�ı��ļ�
-        3.1.1д�ļ����裺
+3.文件的操作
+    程序运行时产生的数据都属于临时数据，程序一旦运行结束都会被释放
+    通过文件可以将数据持久化
+    C++中对文件操作需要包含头文件<fstream>（文件流）
+    文件类型分为两种
+        1.文本文件 - 文件以文本的ASCII码形式存在计算机
+        2.二进制文件 - 文件以文本的二进制形式存储在计算机中
+    操作文件的三大类：
+        1.ofstream：写操作
+        2.ifstream：读操作
+        3.fstream ：读写操作
+    3.1文本文件
+        3.1.1写文件步骤：
             1.#include<fstream>  
-            2.ofstream ofs                   ������������
-            3.ofs.open("�ļ�·��"���򿪷�ʽ)   �����ļ���
-            4.ofs<<"д�������";              ��д���ݣ�
-            5.ofs.close();                   ���ر��ļ���
-            �ļ��򿪷�ʽ��
-                �򿪷�ʽ        ����
-                ios::in         Ϊ���ļ����ļ�
-                ios::out        Ϊд�ļ������ļ�
-                ios::ate       ��ʼλ�ã��ļ�β
-                ios::app       ׷�ӷ�ʽд�ļ�
-                ios::trunc     ����ļ�������ɾ�����ٴ���
-                ios::binary    �����Ʒ�ʽ
-            ע�⣺�ļ��򿪷�ʽ�������ʹ�ã�����|������
-            �ܽ᣺
-                ���ļ������������ͷ�ļ�fstream
-                �����ļ���������ofstream
-                �����ļ�ʱ����Ҫָ�������ļ���·�����Լ��򿪷�ʽ
-                ������<<�������ļ���д����
-                ��������ϣ�Ҫ�ر��ļ�
+            2.ofstream ofs                   （创建流对象）
+            3.ofs.open("文件路径"，打开方式)   （打开文件）
+            4.ofs<<"写入的数据";              （写数据）
+            5.ofs.close();                   （关闭文件）
+            文件打开方式：
+                打开方式        解释
+                ios::in         为读文件打开文件
+                ios::out        为写文件而打开文件
+                ios::ate       初始位置：文件尾
+                ios::app       追加方式写文件
+                ios::trunc     如果文件存在先删除，再创建
+                ios::binary    二进制方式
+            注意：文件打开方式可以配合使用，利用|操作符
+            总结：
+                ·文件操作必须包含头文件fstream
+                ·读文件可以利用ofstream
+                ·打开文件时候需要指定操作文件的路径，以及打开方式
+                ·利用<<可以向文件中写数据
+                ·操作完毕，要关闭文件
             #include<fstream>
             void test()
             {
@@ -1317,15 +1317,15 @@
                 ofs << "20.8.6" << endl;
                 ofs.close();
             }
-        3.1.2���ļ�
+        3.1.2读文件
             1.#include<fstream>
-            2.ifstream ifs;           //����������
-            3.ifs.open("�ļ�·��"���򿪷�ʽ)
-            4.���ַ�ʽ��ȡ
-                ��ifs>>buf
-                ��ifs.getline(buf,sizeof(buf))
-                ��getline(ifs,buf)
-                ��ifs.get()
+            2.ifstream ifs;           //创建流对象
+            3.ifs.open("文件路径"，打开方式)
+            4.四种方式读取
+                ·ifs>>buf
+                ·ifs.getline(buf,sizeof(buf))
+                ·getline(ifs,buf)
+                ·ifs.get()
             5.ifs.close();
             char buf[1024] = { 0 };
             while (ifs>>buf)
@@ -1337,14 +1337,14 @@
                 cout << buf << endl;
             }
             ifs.close();
-    3.2�������ļ�
-        �Զ����Ƶķ�ʽ���ļ����ж�д
-        �򿪷�ʽҪָ��Ϊ'ios::binary'
-        5.2.1��/д�ļ�
-            �����Ʒ�ʽд�ļ���Ҫ���ö�����ó�Ա����write
-            ����ԭ��:ostream& write(const char* buffer,int len)
-            �����Ʒ�ʽ���ļ���Ҫ���ö�����ó�Ա����reade
-            ����ԭ��:ostream& read(const char* buffer,int len)
+    3.2二进制文件
+        以二进制的方式对文件进行读写
+        打开方式要指定为'ios::binary'
+        5.2.1读/写文件
+            二进制方式写文件主要利用对象调用成员函数write
+            函数原型:ostream& write(const char* buffer,int len)
+            二进制方式读文件主要利用对象调用成员函数reade
+            函数原型:ostream& read(const char* buffer,int len)
             #include<fstream>
             class Person
             {
@@ -1354,46 +1354,46 @@
             };
             void test()
             {
-                //������
+                //读操作
                 ofstream ofs("Person.txt", ios::out | ios::binary);
-                Person p = { "����",18 };
+                Person p = { "张三",18 };
                 ofs.write((const char*)&p, sizeof(Person));
                 ofs.close();
-                //д����
+                //写操作
                 ifstream ifs("Person.txt", ios::in | ios::binary);
                 if (!ifs.is_open())
                 {
-                    cout<<"дʧ��"<<endl;
+                    cout<<"写失败"<<endl;
                     return;
                 }
                 ifs.read((char*)&p, sizeof(Person));
                 cout << p.m_Name << ' ' << p.m_Age << endl;
                 ifs.close();
             }
-ְ������ϵͳ
-    ְ�����ࣺԱ�����������ϰ�
-    ��Ϣ��ְ����š�ְ��������ְ����λ�Լ�ְ��
-    ���˳����������˳�ְ������ϵͳ
-    ������ְ����Ϣ��ʵ����������ְ�����ܣ�����Ϣ¼�뵽�ļ��У�ְ����ϢΪ��ְ����š����������ű��
-    ����ʾְ����Ϣ����ʾ��˾�ڲ�����ְ������Ϣ
-    ��ɾ����ְְ�������ձ��ɾ��ָ��Ա��
-    ���޸�ְ����Ϣ�����ձ���޸�ְ��������Ϣ
-    ������ְ����Ϣ������ְ����Ż���ְ�����������в��������Ա��Ϣ
-    �����ձ�����򣺰���ְ����ţ�������������������û�ָ��
-    ����������ĵ�������ļ��м�¼��������Ϣ��ɾ��ǰ��Ҫ�������ѷ�ֹ�������
+职工管理系统
+    职工分类：员工、经理、老板
+    信息：职工编号、职工姓名、职工岗位以及职责
+    ·退出管理程序：退出职工管理系统
+    ·增加职工信息：实现批量添加职工功能，将信息录入到文件中，职工信息为：职工编号、姓名、部门编号
+    ·显示职工信息：显示公司内部所有职工的信息
+    ·删除离职职工：按照编号删除指定员工
+    ·修改职工信息：按照编号修改职工个人信息
+    ·查找职工信息：按照职工编号或者职工的姓名进行查找相关人员信息
+    ·按照编号排序：按照职工编号，进行排序，排序规则由用户指定
+    ·清空所有文档：清空文件中记录的所有信息（删除前需要进行提醒防止误操作）
     
-    ���ļ����ϴ���GITHUB��
-C++��߱��
-    1.ģ��
-        1.1ģ�����
-            ����Ҫ���C++���ͱ�̺�STL��������ϸ��⣬̽��C++������
-            ��C++�ṩ����ģ����ƣ�����ģ�����ģ��
-        1.2����ģ��
-            1.2.1����ģ���﷨
-                �﷨��
+    ·文件已上传至GITHUB√
+C++提高编程
+    1.模板
+        1.1模板概念
+            ·主要针对C++泛型编程和STL技术做详细详解，探讨C++更深层次
+            ·C++提供两种模板机制：函数模板和类模板
+        1.2函数模板
+            1.2.1函数模板语法
+                语法：
                 1.template<typename T>
-                2.������������
-                template<typename T>   //TΪͨ����������
+                2.函数声明或定义
+                template<typename T>   //T为通用数据类型
                 void mySwap(T &a,T &b)
                 {
                     T temp=a;
@@ -1405,18 +1405,18 @@ C++��߱��
                 {
                     int a=10;
                     int b=20;
-                    //���ַ�ʽʹ�ú���ģ��
-                    //1.�Զ������Ƶ�
+                    //两种方式使用函数模板
+                    //1.自动类型推导
                     mySwap(a,b);
                     cout<<a<<b<<endl;
-                    //2.��ʾ�Զ�����
+                    //2.显示自动类型
                     mySwap<int>(a,b);
                     cout<<a<<" "<<b<<endl;
                 }
-            1.2.2����ģ��ע������
-                ���Զ������Ƶ��������Ƶ���һ�µġ���������T���ſ���
-                ��ģ�����Ҫȷ������T���������͡����ſ���ʹ��
-            1.2.3����ģ�尸��
+            1.2.2函数模板注意事项
+                ·自动类型推导，必须推导出一致的‘数据类型T’才可以
+                ·模板必须要确定出‘T的数据类型’，才可以使用
+            1.2.3函数模板案例
                 template<class T>
                 void Swap(T &a,T &b)
                 {
@@ -1466,21 +1466,21 @@ C++��߱��
                     sort(intArr,len1);
                     printArr(intArr,len1);
                 }
-            1.2.4��ͨ�����뺯��ģ�������
-                ����ͨ��������ʱ�����Է�������ʽ����ת��
-                ������ģ�����
-                    1.�Զ�����ת����    2.��ʾָ������ת����
-            1.2.5��ͨ�����뺯��ģ��ĵ��ù���
-                1.���������ʵ�֣����ȵ�����ͨ����
-                2.����ͨ����ģ������б���ǿ�Ƶ��ú���ģ��
-                3.����ģ����Է�����������
-                4.�������ģ����Բ������õ�ƥ�䣬���ȵ���
-                �ܽ᣺��Ȼ�ṩ�˺���ģ�壬�Ͳ�Ҫ�ṩ��ͨ���������׳��ֶ�����
-            1.2.6ģ��ľ�����
-                //���廯��ģ�壬���Խ���Զ������͵ĵ���
+            1.2.4普通函数与函数模板的区别
+                ·普通函数调用时‘可以发生’隐式类型转换
+                ·函数模板调用
+                    1.自动类型转换×    2.显示指定类型转换√
+            1.2.5普通函数与函数模板的调用规则
+                1.如果都可以实现，优先调用普通函数
+                2.可以通过空模板参数列表来强制调用函数模板
+                3.函数模板可以发生函数重载
+                4.如果函数模板可以产生更好的匹配，优先调用
+                总结：既然提供了函数模板，就不要提供普通函数，容易出现二义性
+            1.2.6模板的局限性
+                //具体化的模板，可以解决自定义类型的调用
                 template<>Person myCompare(Person &p1,Person &p2)   
-        1.3��ģ��
-            1.3.1��ģ���﷨
+        1.3类模板
+            1.3.1类模板语法
                 template<class NameType,class AgeType>
                 class Person
                 {
@@ -1495,18 +1495,18 @@ C++��߱��
                 };
                 void test()
                 {
-                    Person<string,int>p1("����",25);
+                    Person<string,int>p1("张三",25);
                 }
-            1.3.2��ģ��ͺ���ģ�������
-                1.��ģ��û���Զ������Ƶ���ʹ�÷�ʽ
-                2.����ģ�塯��ģ������б��п�����Ĭ�ϲ���
-            1.3.3��ģ���г�Ա��������ʱ��
-                1.��ͨ���еĳ�Ա����һ��ʼ�Ϳ��Դ���
-                2.��ģ���еĳ�Ա�����ڵ���ʱ�Ŵ���
-            1.3.4��ģ���������������
-                1.ָ����������
-                2.����ģ�廯
-                3.������ģ�廯
+            1.3.2类模板和函数模板的区别
+                1.类模板没有自动类型推导的使用方式
+                2.‘类模板’在模板参数列表中可以有默认参数
+            1.3.3类模板中成员函数创建时机
+                1.普通类中的成员函数一开始就可以创建
+                2.类模板中的成员函数在调用时才创建
+            1.3.4类模板对象作函数参数
+                1.指定传入类型
+                2.参数模板化
+                3.整个类模板化
                 template<class T1,class T2>
                 class person
                 {
@@ -1523,40 +1523,40 @@ C++��߱��
                     T2 m_age;
                     T1 m_name;
                 };
-                //1.�����ã�ָ����������,��ģ��Ķ������������뺯��
+                //1.（常用）指定传入类型,类模板的对象作参数传入函数
                 void printPerson1(person<string,int>&p)
                 {
                     p.show();
                 }
-                //2.����ģ�廯
+                //2.参数模板化
                 template<class T1,class T2>
                 void printPerson2(person<T1,T2>&p)
                 {
                     p.show();
-                    cout<<"T1������Ϊ��"<<typeid(T1).name()<<endl;
-                    cout<<"T2������Ϊ��"<<typeid(T2).name()<<endl;
+                    cout<<"T1的类型为："<<typeid(T1).name()<<endl;
+                    cout<<"T2的类型为："<<typeid(T2).name()<<endl;
                 }
-                //3.������ģ�廯
+                //3.整个类模板化
                 template<class T>
                 void printPerson3(T &p)
                 {
                     p.show();
-                    cout<<"T������Ϊ��"<<typeid(T).name()<<endl;
+                    cout<<"T的类型为："<<typeid(T).name()<<endl;
                 }
                 void test()
                 {
                     person<string,int>p1("ss2",100);
                     printPerson3(p1);
                 }
-            1.3.5��ģ����̳�         
+            1.3.5类模板与继承         
                 template<class T>
                 class Base
                 {
                     T m;
                 };
-                //class Son:public Base  ��������Ҫָ���������ͣ�����������޷�����ָ���ڴ�
+                //class Son:public Base  ×，必须要指定数据类型，否则编译器无法分配指定内存
                 class Son:public Base<int>{};
-                //��������ָ��������T���� ������Ҳ��Ҫ����ģ��
+                //如果想灵活指定父类中T类型 ，子类也需要变类模板
                 template<class T1,class T2>
                 class Son2:public Base<T2>
                 {
@@ -1564,9 +1564,9 @@ C++��߱��
                 };
                 void test1()
                 {
-                    Son2<int ,char>S2;   //int ָ������T1  ��char ָ����T
+                    Son2<int ,char>S2;   //int 指向子类T1  ，char 指向父类T
                 }
-            1.3.6��ģ���г�Ա����������ʵ��
+            1.3.6类模板中成员函数的类外实现
                 template<class T1,class T2>
                 class Person
                 {
@@ -1575,25 +1575,25 @@ C++��߱��
                     T1 m_age;
                     T2 m_name;
                 };
-                //��ģ�幹�캯������ʵ��
+                //类模板构造函数类外实现
                 template<class T1,class T2>
                 Person<T1,T2>::Person(T1 age,T2 name)
                 {
                         this->m_name=name;
                         this->m_age=age;
                 }
-                //��ģ���Ա��������ʵ��
+                //类模板成员函数类外实现
                 template<class T1,class T2>
                 void Person<T1,T2>::show()
                 {
                     cout<<"  "<<endl;
                 }
-            1.3.7��ģ����ļ���д
-                1.ֱ����������ֱ������Դ�ļ�  #include"person.cpp"
-                2.�����ã���ͷ�ļ�.h��Դ�ļ�.cppд��һ��  #include"person.hpp"
-            1.3.8��ģ������Ԫ
-                ����ģ�������Ԫ��������������ʵ��
-                //��ǰ����
+            1.3.7类模板分文件编写
+                1.直接主函数中直接添加源文件  #include"person.cpp"
+                2.（常用）将头文件.h和源文件.cpp写在一起  #include"person.hpp"
+            1.3.8类模板与友元
+                ·类模板配合友元函数的类内类外实现
+                //提前声明
                 template<class T1,class T2>
                 class person;
 
@@ -1602,17 +1602,17 @@ C++��߱��
                 {
                     cout<<p.m_name<<" "<<p.m_age<<endl;
                 }
-                //��ģ���������������
+                //类模板对象作参数对象
                 template<class T1,class T2>
                 class person
                 {
-                    //1.ȫ�ֺ��� ����ʵ��
+                    //1.全局函数 类内实现
                     friend void show(person<T1,T2>p)
                     {
                         cout<<p.m_name<<" "<<p.m_age<<endl;
                     }
-                    //2.ȫ�ֺ��� ����ʵ��
-                    //�ӿ�ģ������б�
+                    //2.全局函数 类外实现
+                    //加空模板参数列表
                     friend void show2<>(person<T1,T2>p);
 
                 public:
@@ -1632,61 +1632,61 @@ C++��߱��
                     show(p);
                     show2<>(p);
                 }
-                �ܽ᣺û���������󣬾���������ʵ��ȫ�ֺ���
-            1.3.9��ģ�尸��
-                ����������ʵ��һ����ͨ�á��ġ������࡯��Ҫ�����£�
-                �����Զ��������������Լ����Զ����������͡������ݽ��д洢
-                ���������е����ݴ洢����������
-                �����캯���п��Դ������������
-                ���ṩ��Ӧ�Ŀ��������Լ���ֵ��������أ������ǳ������������
-                ���ṩβ�巨��βɾ���������е����ݽ������Ӻ�ɾ��
-                ������ͨ���±�ķ�ʽ���������е�Ԫ�أ�[]�����أ�
-                �����Ի�ȡ�����е�ǰԪ�ظ��������������
+                总结：没有特殊需求，尽量用类内实现全局函数
+            1.3.9类模板案例
+                案例描述：实现一个‘通用’的‘数组类’，要求如下：
+                ·可以对内置数据类型以及‘自定义数据类型’的数据进行存储
+                ·将数组中的数据存储到‘堆区’
+                ·构造函数中可以传入数组的容量
+                ·提供对应的拷贝函数以及赋值运算符重载，‘解决浅拷贝’的问题
+                ·提供尾插法和尾删法对数组中的数据进行增加和删除
+                ·可以通过下标的方式访问数组中的元素（[]的重载）
+                ·可以获取数组中当前元素个数和数组的容量
 
-                �����ϴ���GITHUB
-    2.STL��ʼ
-        2.1STL�ĵ���
-            ��C++���������ͷ��ͱ�̵�˼�룬Ŀ�ľ��Ǹ����Ե�����
-            �����������£����ݽṹ���㷨��δ����һ�ױ�׼�����±�������ظ�����
-            ��Ϊ�˽������ݽṹ���㷨��һ�ױ�׼��������STL
+                ·已上传至GITHUB
+    2.STL初始
+        2.1STL的诞生
+            ·C++的面向对象和泛型编程的思想，目的就是复用性的提升
+            ·大多数情况下，数据结构和算法都未能有一套标准，导致被迫提高重复工作
+            ·为了建立数据结构和算法的一套标准，诞生了STL
         2.2STL
-            ��STL(Standard Template Libary ��׼ģ���)
-            ��STL�����Ϸ�Ϊ������(container) �㷨(algorithm) ������(iterator)
-            �����������͡��㷨��֮��ͨ�����������������޷�����
-            ��STL�������д��붼����ģ�������ģ�庯��
-        2.3STL�������
-            ���� �㷨 ������ �º��� ��������������� �ռ�������
-            1.�������������ݽṹ�������������
-            2.�㷨�����ֳ����㷨
-            3.��������Ϊ�˰����������㷨֮��Ľ��ϼ�
-            4.�º�������Ϊ���ƺ���������Ϊ�㷨��ĳ�ֲ���
-            5.��������һ�����������������߷º�����������ӿڵĶ���
-            6.�ռ�������������ռ�����������
-        2.4STL���������㷨��������  
-            ��������������㷺��һЩ���ݽṹʵ�ֳ���
-                �������Է�Ϊ��
-                    ������������ǿ��ֵ�����������е�ÿ��Ԫ�ض��й̶���λ��
-                    ����ʽ�������������ṹ����Ԫ��֮��û���ϸ�������ϵ�˳���ϵ
-            �㷨�����޵Ĳ��裬����߼�����ѧ�ϵ�����(Algorithm)
-                �㷨���Է�Ϊ��
-                    �ʱ��㷨��ָ��������л����������Ԫ�ص����ݣ����翽�����滻��ɾ��
-                    ���ʱ��㷨��ָ��������в������������Ԫ�ص����ݣ�����鿴�����㡢����
-            ���������������㷨������
-                �㷨��Ҫͨ�����������������������...
-                ÿ�����������Լ�ר���ĵ�����
-                ������ʹ�÷ǳ�������ָ��...
-                �����������ࣺ
-                    ����          �����ݵ�ֻ������
-                    ���          �����ݵ�ֻд����
-                    ǰ��          ��д��������ǰ�ƽ�������
-                    ˫��          ��д��������ǰ�����
-                    �������      ��д��������Ծʽ�����κ�����
+            ·STL(Standard Template Libary 标准模板库)
+            ·STL广义上分为：容器(container) 算法(algorithm) 迭代器(iterator)
+            ·‘容器’和‘算法’之间通过‘迭代器’进行无缝连接
+            ·STL几乎所有代码都采用模板类或着模板函数
+        2.3STL六大组件
+            容器 算法 迭代器 仿函数 适配器（配接器） 空间配置器
+            1.容器：各种数据结构，用来存放数据
+            2.算法：各种常用算法
+            3.迭代器：为了扮演容器与算法之间的胶合剂
+            4.仿函数：行为类似函数，可作为算法的某种策略
+            5.适配器：一种用来修饰容器或者仿函数或迭代器接口的东西
+            6.空间配置器：负责空间的配置与管理
+        2.4STL中容器、算法、迭代器  
+            容器：将运用最广泛的一些数据结构实现出来
+                容器可以分为：
+                    序列是容器：强调值得排序，容器中得每个元素都有固定的位置
+                    关联式容器：二叉树结构，各元素之间没有严格的物理上的顺序关系
+            算法：有限的步骤，解决逻辑或数学上的问题(Algorithm)
+                算法可以分为：
+                    质变算法：指运算过程中会更改区间内元素的内容，例如拷贝、替换、删除
+                    非质变算法：指运算过程中不会更改区间内元素的内容，例如查看、计算、遍历
+            迭代器：容器和算法的桥梁
+                算法需要通过迭代器访问容器里的数据...
+                每个容器都有自己专属的迭代器
+                迭代器使用非常类似于指针...
+                迭代器的种类：
+                    输入          对数据的只读访问
+                    输出          对数据的只写访问
+                    前向          读写，并能向前推进迭代器
+                    双向          读写，并能向前和向后
+                    随机访问      读写，可以跳跃式访问任何数据
 
-        2.5�����㷨��������ʼ
-            2.5.1vector���������������
-                ������vector
-                �㷨��for_each
-                ��������vector<int>::iterator
+        2.5容器算法迭代器初始
+            2.5.1vector存放内置数据类型
+                容器：vector
+                算法：for_each
+                迭代器：vector<int>::iterator
                 void myPrint(int val)
                 {
                     cout<<val<<endl;
@@ -1695,35 +1695,35 @@ C++��߱��
                 {
                     vector<int>v;
 
-                //�������в������ݣ�β��
+                //像容器中插入数据，尾插
                     v.push_back(10);
                     v.push_back(20);
                     v.push_back(30);
 
-                    //��һ�б�����ʽ
+                    //第一中遍历方式
 
-                    //begin()ָ�������е�һ��Ԫ��
+                    //begin()指向容器中第一个元素
                     vector<int>::iterator itBegin=v.begin(); 
-                    //end()ָ�����������һ��Ԫ�ص���һ��λ�� 
+                    //end()指向容器中最后一个元素的下一个位置 
                     vector<int>::iterator itEnd=v.end();
 
                     while(itBegin!=itEnd)
                     {
-                        //������
+                        //解引用
                         cout<<*itBegin<<endl;
                         itBegin++;
                     }
 
-                //�ڶ��ֱ����ķ�ʽ
+                //第二种遍历的方式
                 for(vector<int>::iterator it=v.begin();it!=v.end();it++)
                 {
                     cout<<*it<<endl;
                 }
 
-                //�����ֱ���  ����STL�ṩ�����㷨
+                //第三种遍历  利用STL提供遍历算法
                 for_each(v.begin(),v.end(),myPrint);
                 }
-            2.5.2vector����Զ�����������
+            2.5.2vector存放自定义数据类型
                 class Person
                 {
                 public:
@@ -1751,23 +1751,23 @@ C++��߱��
                         cout<<it->m_age<<" "<<it->m_name<<endl;
                     }
                 }
-            2.5.3vector����Ƕ������
+            2.5.3vector容器嵌套容器
                 void test()
                 {
-                    //��
+                    //大
                     vector<vector<int>>v;
-                    //С
+                    //小
                     vector<int>v1;
                     vector<int>v2;
                 
-                    //��С��������������
+                    //向小容器中添加数据
                     for(int i=0;i<4;i++)
                     {
                         v1.push_back(i+1);
                         v2.push_back(i+2);
                     }
                 
-                    //��С�������뵽��������
+                    //将小容器插入到大容器中
                     v.push_back(v1);
                     v.push_back(v2);
                 
@@ -1777,109 +1777,109 @@ C++��߱��
                             cout<<*vit<<" "<<endl;
                     }
                 }
-    3.STL��������
-        3.1string����
-            3.1.1string��������
-                ���ʣ���
-                string ��char* ����
-                    1.char*��һ��ָ��
-                    2.string��һ���࣬���ڲ���װ��  char* ����������ַ���
-                    �ص㣺
-                        string���ڲ���װ�˺ܶ��Ա����
-                        ���磺����find������copy��ɾ��delete
-                        string����char* ��������ڴ棬���õ��ĸ���Խ���ȡֵԽ�磬�����ڲ�����
-            3.1.2string���캯��
+    3.STL常用容器
+        3.1string容器
+            3.1.1string基本概念
+                本质：类
+                string 和char* 区别：
+                    1.char*是一个指针
+                    2.string是一个类，类内部封装了  char* ，管理这个字符串
+                    特点：
+                        string类内部封装了很多成员方法
+                        例如：查找find，拷贝copy，删除delete
+                        string管理char* 所分配的内存，不用担心复制越界和取值越界，由类内部负责
+            3.1.2string构造函数
                 string();
                 string(const cha* s);
                 string(const string& str);
-                string(int n,char c);//���n��c
-            3.1.3string�ĸ�ֵ����
-                ������������string �ַ������и�ֵ
+                string(int n,char c);//输出n个c
+            3.1.3string的赋值操作
+                功能描述：给string 字符串进行赋值
                 1.= 2.assign()
-            3.1.4string�ַ���ƴ��
-                ����������ʵ�����ַ���ĩβƴ���ַ���
+            3.1.4string字符串拼接
+                功能描述：实现在字符串末尾拼接字符串
                 1.+= 2.append
-            3.1.5string���Һ��滻
-                ����������1.���ң�����ָ���ַ����Ƿ���� 2.�滻����ָ����λ���滻�ַ���
+            3.1.5string查找和替换
+                功能描述：1.查找：查找指定字符串是否存在 2.替换：在指定的位置替换字符串
                 1.find rfind 2.replace
-            3.1.6string�ַ����Ƚ�
-                �����������ַ���֮��ıȽ�
-                �ȽϷ�ʽ���ַ����Ƚ��ǰ��ַ���ASCII��������жԱ�  1.���= 0 2.����> 1 3.С��< -1
+            3.1.6string字符串比较
+                功能描述：字符串之间的比较
+                比较方式：字符串比较是按字符的ASCII码逐个进行对比  1.相等= 0 2.大于> 1 3.小于< -1
                 1.compare
-            3.1.7string�ַ���ȡ
-                ������������ָ��λ�÷���Ԫ�أ������޸�Ԫ��  
-                1.[](��������) 2.at(���ʵ����ַ�)
-            3.1.8string�����ɾ��
-                �������������ַ������в����ɾ��
+            3.1.7string字符存取
+                功能描述：对指定位置访问元素，可以修改元素  
+                1.[](符号重载) 2.at(访问单个字符)
+            3.1.8string插入和删除
+                功能描述：对字符串进行插入和删除
                 1.insert 2.erase    
-            3.1.9string�Ӵ�
-                �������������ַ����н�ȡ��Ҫ���ִ�
+            3.1.9string子串
+                功能描述：从字符串中截取想要的字串
                 1.substr
-                �ܽ᣺������ÿ����ڿ����л�ȡ��Ч��Ϣ
-        3.2vector����
-            3.2.1��������
-                ���ܣ�vector���ݽṹ������ǳ����ƣ�Ҳ��Ϊ��������
-                vector����ͨ���������
-                    �����Ǿ�̬�ģ���vector�ǿ��Զ�̬��չ��
-                ��̬��չ��
-                    ����Ѱ�Ҹ�����ڴ�ռ䣬����ԭ���ݺ�����������
-                    ��vector�����ĵ�������֧��������ʵĵ�����
-            3.2.2vector���캯��
-                ��������������vector����
-                ����ԭ�ͣ�
-                    vertor<T> v;                   //����ģ��ʵ����ʵ�֣�Ĭ�Ϲ��캯��
-                    vertor<v.begin(),v.end()>;     //��v[begin(),end()]�����е�Ԫ�ؿ�������ʡ
-                    vector(n,elem);                //���캯����n��elem����������
-                    vector(const vector &vec);     //�������캯��
-            3.2.3vector��ֵ����
-                ������������vector������ֵ
+                总结：灵活运用可以在开发中获取有效信息
+        3.2vector容器
+            3.2.1基本概念
+                功能：vector数据结构和数组非常相似，也称为单端数据
+                vector和普通数组的区别：
+                    数组是静态的，而vector是可以动态扩展的
+                动态扩展：
+                    ·是寻找更大的内存空间，拷贝原内容后添加新内容
+                    ·vector容器的迭代器是支持随机访问的迭代器
+            3.2.2vector构造函数
+                功能描述：创建vector容器
+                函数原型：
+                    vertor<T> v;                   //采用模板实现类实现，默认构造函数
+                    vertor<v.begin(),v.end()>;     //将v[begin(),end()]区间中的元素拷贝给本省
+                    vector(n,elem);                //构造函数将n个elem拷贝给本身
+                    vector(const vector &vec);     //拷贝构造函数
+            3.2.3vector赋值操作
+                功能描述：给vector容器赋值
                 1.= 2.assign()
-            3.2.4vector�����ʹ�С
-                ������������ȡvector������С
+            3.2.4vector容量和大小
+                功能描述：获取vector容器大小
                 1.empty() 2.capacity() 3.size() 4.resize(int num) 5.resize(int num,elem)
-            3.2.5vector�����ɾ��
+            3.2.5vector插入和删除
                 1.push_back() 2.pop_back() 3.insert(v1.begin(),10) 4.erase(v1,begin(),2) 5.clear()
-            3.2.6vector���ݴ�ȡ
-                1.at(int index) 2.operator[] 3.front()���ص�һ��Ԫ�� 4.back()�������������һ��Ԫ��
-            3.2.7vector��������
-                ����ʵ�֣�ʵ������������Ԫ�ػ���
+            3.2.6vector数据存取
+                1.at(int index) 2.operator[] 3.front()返回第一个元素 4.back()返回容器中最后一个元素
+            3.2.7vector互换容器
+                功能实现：实现两个容器内元素互换
                 1.swap(vec);
-                ������swap���������ڴ�ռ�
+                ·巧用swap可以收缩内存空间
                 vector<int>(v).swap(v);
-                //��x��vector<int>(v)->���������ú��Զ�ɾ��
-                //v����������x������ʵ�������ڴ�
-            3.2.8vectorԤ���ռ�
-                ��������������vector�ڡ���̬��չ������ʱ����չ����
-                1.reserve(int len)//����Ԥ��len��Ԫ�س��ȣ�Ԥ��λ�ò���ʼ�������Բ����Է���
-                �ܽ᣺����������ϴ󣬿���һ��ʼ��ʹ��reserve
-        3.3deque����
-            ���ܣ�˫�����飬���Զ�ͷ�˽��в���ɾ������
-            ��vector����
-                ��vectorΪ���ˣ�������Խ��Ч��Խ��
-                ��deque��Զ��ԣ���ͷ���Ĳ���ɾ���ٶȻ��vector��
-                ��vector����Ԫ��ʱ���ٶȻ��deque�죬������ߵ��ڲ�ʵ���й�
-            �ڲ�����ԭ����
-                deque�ڲ��и����п�������ά��ÿ���Ρ����������������ݣ������������ʵ����
-                �п���ά�����ǻ������ĵ�ַ��ʹ��ʹ��dequeʱ��һƬ�������ڴ��ַ
+                //（x）vector<int>(v)->匿名对象，用后自动删除
+                //v和匿名对象x交换，实现收缩内存
+            3.2.8vector预留空间
+                功能描述：减少vector在‘动态扩展’容量时的扩展次数
+                1.reserve(int len)//容器预留len个元素长度，预留位置不初始化，所以不可以访问
+                总结：如果数据量较大，可以一开始便使用reserve
+        3.3deque容器
+            功能：双端数组，可以对头端进行插入删除操作
+            与vector区别：
+                ·vector为单端，数据量越大效率越低
+                ·deque相对而言，对头部的插入删除速度会比vector快
+                ·vector访问元素时的速度会比deque快，这和两者的内部实现有关
+            内部工作原理：
+                deque内部有个‘中控器’，维护每‘段’‘缓冲区’的内容，缓冲区存放真实数据
+                中控器维护的是缓冲区的地址，使得使用deque时像一片连续的内存地址
                 
-                Deque�����ĵ�����Ҳ��֧��������ʵ�
-            3.3.2deque���캯��
-                1.��vectorһ��
-            3.3.3��ֵ����
-                1.��vectorһ��
-            3.3.4��С����
-                1.��vector����һ������û�л�ȡ��������
-            3.3.5�����ɾ��
-                1.push_front() //ͷ�� 2.pop_front()
-                3.�����vectorһ��
-            3.3.6���ݴ�ȡ
-                1.front()//��ȡ��һ��Ԫ�� 2.back()��ȡ���һ��Ԫ��
-                3.������vectorһ��
-            3.3.7�������
-                �����㷨����������
+                Deque容器的迭代器也是支持随机访问的
+            3.3.2deque构造函数
+                1.和vector一样
+            3.3.3赋值操作
+                1.和vector一样
+            3.3.4大小操作
+                1.和vector大致一样，但没有获取容量机制
+            3.3.5插入和删除
+                1.push_front() //头插 2.pop_front()
+                3.其余和vector一样
+            3.3.6数据存取
+                1.front()//获取第一个元素 2.back()获取最后一个元素
+                3.其余与vector一样
+            3.3.7排序操作
+                利用算法对容器排序
                 1.sort(iterator begin(),iterator end());
-                �ܽ᣺����֧��������ʵĵ�����������������ʹ��sort()
-        3.4������ϰ
+                总结：对于支持随机访问的迭代器容器，都可以使用sort()
+        3.4案例练习
                 class Person
                 {
                 public:
@@ -1897,7 +1897,7 @@ C++��߱��
                     string nameSeed="ABCDE";
                     for(int i=0;i<5;i++)
                     {
-                        string name="ѡ��";
+                        string name="选手";
                         name+=nameSeed[i];
                         int score=0;
                         Person p(name,score);
@@ -1913,13 +1913,13 @@ C++��߱��
                         deque<int>J;
                         for(int i=0;i<10;i++)
                         {      
-                            int num=rand()%41+60;//���60~100��
+                            int num=rand()%41+60;//随机60~100分
                             J.push_back(num);
                         }
                         sort(J.begin(),J.end());
                         J.pop_front();
                         J.pop_back();
-                        int num=0;   //�˴�Ϊ�ܷ�
+                        int num=0;   //此处为总分
                         for(deque<int>::iterator dit=J.begin();dit!=J.end();dit++)
                         {
                             num+=*dit;   
@@ -1934,12 +1934,12 @@ C++��߱��
                 {
                     for(vector<Person>::iterator it=v.begin();it!=v.end();it++)
                     {
-                        cout<<"ѡ��������"<<it->m_name<<" "<<"ѡ�ַ�����"<<it->m_score<<endl;
+                        cout<<"选手姓名："<<it->m_name<<" "<<"选手分数："<<it->m_score<<endl;
                     }
                 }
                 void test()
                 {
-                    //v1�д���5��ѡ��
+                    //v1中创建5名选手
                     vector<Person>v1;
                 
                     CreatePerson(v1);
@@ -1949,82 +1949,82 @@ C++��߱��
                     show(v1);
                 
                 }
-        3.5stack����
-            3.5.1��������
-                ���ʣ�ջ
-                ע�����1.�Ƚ���� 2.������������Ϊ
-            3.5.2���ýӿ�
+        3.5stack容器
+            3.5.1基本概念
+                本质：栈
+                注意事项：1.先进后出 2.不允许遍历行为
+            3.5.2常用接口
                 1.stack<T>stk 2.stack(const stack &s)
                 3.stack operator=(const stack& stk)
-                4.push()  5.pop() 6.top()//����ջ��Ԫ��
-                7.empty() //�ж��Ƿ�Ϊ�� 8.size() //����ջ�Ĵ�С
-        3.6queue����
-            3.6.1��������    
-                ���ʣ�����
-                ע�����1.�Ƚ��ȳ� 2.�������б�����Ϊ��ֻ�ܷ��ʶ�ͷ(front)�Ͷ�β(back)
-            3.6.2���ýӿ�
-                ����top()�����stackһ��
-                1.front()//���ض�ͷ 2.back()//���ض�β
-        3.7list����
-            3.7.1��������
-                ���ʣ�����
-                ע�����
-                    1.STL�е�������һ����˫��ѭ��������
-                    2.list�еĵ�����ֻ֧��ǰ�ƺͺ��ƣ�����˫�������
-            3.7.2���캯��
+                4.push()  5.pop() 6.top()//返回栈顶元素
+                7.empty() //判断是否为空 8.size() //返回栈的大小
+        3.6queue容器
+            3.6.1基本概念    
+                本质：队列
+                注意事项：1.先进先出 2.不允许有遍历行为，只能访问队头(front)和队尾(back)
+            3.6.2常用接口
+                除了top()其余和stack一样
+                1.front()//返回队头 2.back()//返回队尾
+        3.7list容器
+            3.7.1基本概念
+                本质：链表
+                注意事项：
+                    1.STL中的链表是一个‘双向循环’链表
+                    2.list中的迭代器只支持前移和后移，属于双向迭代器
+            3.7.2构造函数
                 1.list<T>lst 2list(beg(),end()) 
                 3.list(n,elem) 4.list(const list &lst)
-            3.7.3��ֵ�ͽ���
+            3.7.3赋值和交换
                 1.operator= 2.assign(n,elem) 3.assign(beg,end) 
                 3.swap(lst)
-            3.7.4��С����
-                ��������Capacity()�⣬������vectorһ��
-            3.7.5�����ɾ��
+            3.7.4大小操作
+                除了容量Capacity()外，其余与vector一致
+            3.7.5插入和删除
                 1.push_back() 2.push_front() 3.pop_back() 4.pop_back()
                 5.insert(pos,elem) 6.insert(pos,n,elem) 7.insert(pos,beg,end)
-                8.clear() 9.erase(beg,end) 10.remove(elem)//ɾ��������������elem��ƥ�������
-                /*pos ->ʹ�õ�����
+                8.clear() 9.erase(beg,end) 10.remove(elem)//删除容器中所有与elem所匹配的数据
+                /*pos ->使用迭代器
                     list<int>::iterator it=L.begin();
                     insert(++it,elem);*/
-            3.7.6���ݴ�ȡ
-                1.front() //���ص�һ��Ԫ��2.back()//�������һ��Ԫ�� 
-                ע�����1.��[]���� 2.��at()����������֧���������
-            3.7.7��ת������  
+            3.7.6数据存取
+                1.front() //返回第一个元素2.back()//返回最后一个元素 
+                注意事项：1.无[]重载 2.无at()，迭代器不支持随机访问
+            3.7.7反转和排序  
                 1.reverse() 
-                //���в�֧��������ʵĵ���������������֧�֡��㷨
-                //��֧��������ʵĵ������������ڲ����ṩһЩ��Ա�������㷨
-                2.sort() //Ĭ�����򣬽����ṩ�������͡��Ļص����������� v1>v2
-                //�������Զ�����������ʱ��Ҫ�ṩ��һ�����򣨻ص���������
-        3.8set/multiset����
-            3.8.1��������
-                ���ʣ����ڹ���ʽ�������ײ�Ϊ������
-                �ص㣺����Ԫ�ض����ڲ���ʱ�Զ�������
-                ����set���������ظ���Ԫ�ض�multiset����
-            3.8.2set����͸�ֵ
+                //所有不支持随机访问的迭代器的容器‘不支持’算法
+                //不支持随机访问的迭代器的容器内部会提供一些成员函数的算法
+                2.sort() //默认升序，降序‘提供布尔类型’的回调函数，返回 v1>v2
+                //在排序自定义数据类型时需要提供‘一定规则（回调函数）’
+        3.8set/multiset容器
+            3.8.1基本概念
+                本质：属于关联式容器，底层为二叉树
+                特点：所有元素都会在插入时自动被排序
+                区别：set不允许有重复的元素而multiset允许
+            3.8.2set构造和赋值
                 1.set<T>st 2.set(const set& st)
                 3.operator=
-            3.8.3set��С�ͽ���
+            3.8.3set大小和交换
                 1.size() 2.empty() 3.swap(st)
-            3.8.4set�����ɾ��
+            3.8.4set插入和删除
                 1.insert(elem) 2.clear() 3.erase(pos/beg,end/elem)
-            3.8.5set���Һ�ͳ��
-                1.find(key)//���ڷ��ظü��ĵ������������ڷ���st.end() 2.count(key)//����
-            3.8.6set��multiset����
-                1.set�����Բ����ظ�����
-                2.set�������ݵ�ͬʱ�᷵�ز���������ʾ�����Ƿ�ɹ������ص������Ͳ�����
-                3.multiset��������ʱ��������ݣ���˿����ظ�����
-            3.8.7pair���鴴��
-                �����������ɶԳ��ֵ����ݣ����ö�����Է�����������
-                �﷨��������Ҫ����ͷ�ļ���
+            3.8.5set查找和统计
+                1.find(key)//存在返回该键的迭代器，不存在返回st.end() 2.count(key)//计数
+            3.8.6set和multiset区别
+                1.set不可以插入重复数据
+                2.set插入数据的同时会返回插入结果，表示插入是否成功（返回迭代器和布尔）
+                3.multiset插入数据时不检测数据，因此可以重复插入
+            3.8.7pair对组创建
+                功能描述：成对出现的数据，利用队组可以返回两个数据
+                语法：（不需要包含头文件）
                     1.pair<type,type>p(val1,val2);
                     2.pair<type,type>p=make_pair(val1,val2);
 
                     pair<string,int>p("Tom",20);
-                    cout<<"������"<<p.first<<"���䣺"<<p.second<<endl;
+                    cout<<"姓名："<<p.first<<"年龄："<<p.second<<endl;
                     pair<string,int>p1=make_pair("jery",30);
-                    cout<<"������"<<p1.first<<"���䣺"<<p1.second<<endl;
-            3.8.8set����
-                ���÷º������Ըı��������
+                    cout<<"姓名："<<p1.first<<"年龄："<<p1.second<<endl;
+            3.8.8set排序
+                利用仿函数可以改变排序规则
                 class Person
                 {
                 public:
@@ -2038,7 +2038,7 @@ C++��߱��
                     string m_name;
                 };
 
-                //�º��������Ǹ���������
+                //仿函数本质是个数据类型
                 class Mycompare
                 {
                 public:
@@ -2058,7 +2058,7 @@ C++��߱��
                 };
                 void test()
                 {
-                    //set���������������
+                    //set存放内置数据类型
                     set<int>s1;
 
                     s1.insert(10);
@@ -2085,11 +2085,11 @@ C++��߱��
                     }
                     cout<<endl;
 
-                    //set����Զ�����������
+                    //set存放自定义数据类型
 
-                    Person p1("����",25);
-                    Person p2("�ŷ�",26);
-                    Person p3("����",27);
+                    Person p1("刘备",25);
+                    Person p2("张飞",26);
+                    Person p3("关羽",27);
 
                     set<Person,Diy_Mycompare>s3;
 
@@ -2099,36 +2099,36 @@ C++��߱��
                     
                     for(set<Person,Diy_Mycompare>::iterator it=s3.begin();it!=s3.end();it++)
                     {
-                        cout<<"������"<<it->m_name<<" "<<"���䣺"<<it->m_age<<endl;
+                        cout<<"姓名："<<it->m_name<<" "<<"年龄："<<it->m_age<<endl;
                     }
                     cout<<endl;
                 }
-        3.9map/multimap����
-            3.9.1��������
-                ���ʣ�
-                    map/multimap���ڹ���ʽ�������ײ��ö�����ʵ��
-                �ص㣺
-                    1.map�С����С�Ԫ�ض��ǡ�pair��
-                    2.��&ֵ(python�е�diractor)
-                    3.������Ԫ�ء��������Ԫ�صļ�ֵ�Զ�����
-                �ŵ㣺
-                    1.���Ը���keyֵ�����١��ҵ�valueֵ
-                    2.map�������������������ظ���keyֵ
-                    3.multimap�����������������ظ���keyֵ
-            3.9.2map����͸�ֵ
-                1.��set/multisetһ�£������������б����ǡ��ɶԡ��� map<int,int>m;
-            3.9.3��С�ͽ���
-                1.��set/multisetһ��
-            3.9.4�����ɾ��
+        3.9map/multimap容器
+            3.9.1基本概念
+                本质：
+                    map/multimap属于关联式容器，底层用二叉树实现
+                特点：
+                    1.map中‘所有’元素都是‘pair’
+                    2.键&值(python中的diractor)
+                    3.‘所有元素’都会根据元素的键值自动排序
+                优点：
+                    1.可以根据key值‘快速’找到value值
+                    2.map‘不允许’容器中有重复的key值
+                    3.multimap‘允许’容器中有重复的key值
+            3.9.2map构造和赋值
+                1.与set/multiset一致，但数据类型中必须是‘成对’的 map<int,int>m;
+            3.9.3大小和交换
+                1.与set/multiset一致
+            3.9.4插入和删除
                 1.1 insert(pair<int,int>(elem,elem)) 
                 1.2 insert(make_pair(elem,elem)) 
                 1.3 insert(map(<int,int>::valuetype(key,value))) 
-                1.4 m[4] //�����飬��Ҫ��key������value,�����ü�4 ��m[4]������ֵ 
-                2.������mat/multisetһ�£�ɾ��ʱ����key��ɾ����
-            3.9.5���Һ�ͳ��
-                1.������key��������ͳ�ƣ�������setһ��
-            3.9.6����
-                ���÷º������Ըı��������
+                1.4 m[4] //不建议，主要用key来访问value,例如用键4 （m[4]）访问值 
+                2.其余与mat/multiset一致，删除时按照key来删除，
+            3.9.5查找和统计
+                1.‘按照key’查找与统计，其余与set一致
+            3.9.6排序
+                利用仿函数可以改变排序规则
                 class Person
                 {
                 public:
@@ -2142,7 +2142,7 @@ C++��߱��
                     string m_name;
                 };
 
-                //�º��������Ǹ���������
+                //仿函数本质是个数据类型
                 class Mycompare
                 {
                 public:
@@ -2154,23 +2154,327 @@ C++��߱��
 
                 void test()
                 {
-                    //map���������������
+                    //map存放内置数据类型
                     map<int,int,Mycompare>p1;
                     p1.insert(make_pair(1,10));
                     p1.insert(make_pair(2,30));
 
-                    //map����Զ�����������
+                    //map存放自定义数据类型
                     map<int,Person,Mycompare>p2;
-                    p2.insert(make_pair(1,Person("����",20)));
-                    p2.insert(make_pair(2,Person("����",30)));
+                    p2.insert(make_pair(1,Person("张三",20)));
+                    p2.insert(make_pair(2,Person("李四",30)));
 
                     for(map<int,Person>::iterator it=p2.begin();it!=p2.end();it++)
                     {
-                        cout<<"����"<<it->first<<"ֵ->������"
-                        <<it->second.m_name<<"ֵ->���䣺"<<it->second.m_age<<endl;
+                        cout<<"键："<<it->first<<"值->姓名："<<it->second.m_name<<"值->年龄："<<it->second.m_age<<endl;
                     }
+                }"""
+        案例练习：
+            #define CEHUA 1
+            #define MEISHU 2
+            #define JISHU 3
+            class Person
+            {
+            public:
+
+                int m_Salary;
+                string m_name;
+
+            };
+            //创建员工
+            void CreateWorker(vector<Person> &p1)
+            {
+
+                string nameSeed="ABCDEFGHIJ";
+                for(int i=0;i<10;i++)
+                {
+                    Person p;
+                    p.m_name="员工";
+                    p.m_name+=(nameSeed[i]);
+
+                    p.m_Salary=rand()%10000+9999;
+                    p1.push_back(p);
+                }
+            }
+            //随机给员工分组
+            void setGroup(vector<Person>&p1,multimap<int,Person>&m1)   
+            {
+                for(vector<Person>::iterator it=p1.begin();it!=p1.end();it++)
+                {
+                    int DepId=rand()%3+1;//1~3
+                    //将员工随机分配到部门
+                    m1.insert(make_pair(DepId,*it));
+                }
+            }
+            //展示员工信息
+            void show(multimap<int,Person>&p)
+            {
+                int count=0;  //统计各部门人数
+                
+                cout<<"策划部门："<<endl;
+                multimap<int,Person>::iterator it=p.find(CEHUA);  //找到某个部门第一次出现的位置
+                for(;it!=p.end() && count<p.count(CEHUA) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
+                }
+                count=0;
+                cout<<"美术部门："<<endl;
+                it=p.find(MEISHU);
+                for(;it!=p.end() && count<p.count(MEISHU) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
+                }
+                count=0;
+                cout<<"技术部门："<<endl;
+                it=p.find(JISHU);
+                for(;it!=p.end() && count<p.count(JISHU) ;it++,count++)
+                {
+                    cout<<"姓名："<<it->second.m_name<<" "<<"薪水："<<it->second.m_Salary<<" "<<endl;
                 }
 
-                
+            }
+
+            void test()
+            {
+                srand((unsigned int)time(NULL));
+                vector<Person>v_worker;
+                CreateWorker(v_worker);
+                multimap<int,Person>m_Department;
+                setGroup(v_worker,m_Department);
+                show(m_Department);
+            }
+    4.STL-函数对象
+        4.1函数对象
+            4.1.1概念
+                1.重载函数调用操作符的类，其对象称为函数对象
+                2.函数对象使用重载()时，行为类似函数调用，也叫仿函数
+                本质：类，不是函数
+            4.1.2函数对象使用
+                1.使用时可以像普通函数那样调用，可以有参数
+                2.函数对象‘超出’普通函数的概念，函数对象可以有自己的状态
+                3.可以作为参数传递
+                class MyAdd
+                {
+                public:
+
+                    MyAdd()
+                    {
+                        this->count=0;
+                    }
+                    void operator()(string text)
+                    {
+                        cout<<"ssss："<<text<<endl;
+                        //函数本身可以有自己的行为
+                        this->count++;
+                    }
+                private:
+                    int count;
+                };
+                //仿函数可以作为函数参数传入
+                void dowork(MyAdd &M,string text)
+                {
+                    M(text);
+                }
+                void test()
+                {
+                    string text="11111";
+                    MyAdd m;
+                    dowork(m,text);
+                }
+        4.2谓词(pred)(predicate)
+            4.2.1谓词概念
+                概念：
+                    1.返回bool类型的仿函数称为谓词
+                    2.如果重载()接收一个参数，那么叫一元谓词
+                    3.如果重载()接收两个参数，那么叫二元谓词
+        4.3内建的函数对象
+            4.3.1内建函数对象意义
+                概念：STL内建了一些函数对象
+                分类：1.算数仿函数 2.关系仿函数 3.逻辑仿函数
+                用法：
+                    1.这些仿函数所产生的对象和一般函数完全相同
+                    2.使用内建函数对象，需要引入头文件 functional
+            4.3.2算数仿函数        
+                功能描述：1.四则运算(+-×÷) 2.其中negate(取反)是一元运算，其他都是二元运算  
+                negate<int>n;
+                n(50);
+                plus<int>m;
+                m(10,20);
+            4.3.3关系仿函数
+                功能描述：实现关系对比(> < = <= >= !=)(greater less equal less_equal greater_equal not_in_equal)
+            4.3.4逻辑仿函数
+                功能描述：实现逻辑运算(& | !)(logical_and logical_or logical_not)
+    5.STL-常用算法
+        概念：
+            1.算法主要有头文件 algorithm functional numeric
+            2.algorithm是所有STL头文件中最大的一个
+            3.functional定义了一些模板类，用以声明函数对象
+            4.numeric体积小只包含几个序列上进行简单数学运算 的模板函数
+        5.1常用遍历算法
+            5.1.1for_each
+                函数原型：for_each(iterator beg,iterator end,_func)
+                class Print_f
+                {
+                    public:
+                    void operator()(int val)
+                    {
+                        cout<<val<<" ";
+                    }
+                };
+
+                void print_f(int val)
+                {
+                    cout<<val<<" ";
+                }
+                void test()
+                {
+                    vector<int>v;
+                    v.push_back(10);
+                    v.push_back(20);
+                    v.push_back(30);
+                    v.push_back(40);
+                    //普通函数
+                    for_each(v.begin(),v.end(),print_f);
+                    cout<<endl;
+                    //仿函数
+                    for_each(v.begin(),v.end(),Print_f());
+                }
+            5.1.2transform
+                函数原型：transform(iterator beg,iterator end,_func)
+                class Transfor_m
+                {
+                    public:
+                    int operator()(int val)
+                    {
+                        return val+100;
+                    }
+                };
+                void print_f(int val)
+                {
+                    cout<<val<<" ";
+                }
+                void test()
+                {
+                    vector<int>v;
+                    v.push_back(10);
+                    v.push_back(20);
+                    v.push_back(30);
+                    v.push_back(40);
+                    
+                    vector<int>v1;
+                    v1.resize(v.size());
+                    transform(v.begin(),v.end(),v1.begin(),Transfor_m());
+                    for_each(v1.begin(),v1.end(),print_f);
+                }
+        5.2常用查找算法
+            5.2.1find
+                功能描述：查找指定元素，返回指定元素迭代器，找不到返回结束位置迭代器
+                函数原型：find(iterator beg,iterator end,value);
+            5.2.2find_if
+                功能描述：按照条件查找元素，返回指定元素迭代器，找不到返回结束位置迭代器
+                函数原型：find_if(iterator beg,iterator end,_Pred);
+            5.2.3adjacent_find
+                功能描述：‘查找相邻’重复元素，查到返回首个重复元素的迭代器，否则返回结束位置迭代器
+                函数原型：adjacent_find(iterator beg,iterator end);    
+            5.2.4binary_search
+                功能描述：查找指定元素是否存在，返回布尔类型
+                函数原型：bool binary_search(iterator beg,iterator end,value)       
+                注意事项：在无序序列中不可用
+            5.2.5count
+                功能描述：统计元素个数
+                函数原型：count(iterator beg,iterator end,value)
+            5.2.6count_if
+                功能描述：按照条件统计元素个数
+                函数原型：count_if(iterator beg,iterator end,_Pred)
+        5.3常用排序算法
+            5.3.1sort
+                函数原型：sort(iterator beg,iterator end,_Pred)
+                注意事项：默认升序，添加谓词自定义排序
+            5.3.2random_shuffle
+                功能描述：打乱区间内的元素
+                函数原型：random_shuffle(iterator beg,iterator end,_Pred)
+                注意事项：使用时记得加上‘随机数种子’
+            5.3.3merge
+                功能描述：两个‘有序’且‘排序一致’的容器元素合并，并存储到另一个容器中以及进行排序
+                函数原型：merge(iterator beg1,iterator end1,iterator beg2,iterator end2,iterator dest)
+                /*
+                    beg1 end1 :第一个容器
+                    beg2 end2 :第二个容器
+                    dest      :目标容器开始位置迭代器
+                */
+                注意事项：两个容器必须要‘有序’且‘排序一致’
+            5.3.4reverse
+                功能描述：反转指定范围元素
+                函数原型：reverse(iterator beg,iterator end)
+        5.4常用拷贝和替换算法
+            5.4.1copy
+                功能描述：容器内指定范围的元素拷贝到另一容器中
+                函数原型：copy(iterator beg,iterator end,dest)
+                注意事项：dest :目标容器的起始迭代器
+            5.4.2replace
+                功能描述：将容器内指定范围的所有旧元素修改为新元素
+                函数原型：replace(iterator beg,iterator end,oldvalue,newvalue)
+            5.4.3replace_if
+                功能描述：将区间内所有满足条件的元素，替换成指定元素
+                函数原型:replace_if(iterator beg,iterator end,_Pred,newvalue)
+            5.4.4swap
+                功能描述：互换两个容器的元素
+                函数原型：swap(container c1,container c2)
+                注意事项：容器类型必须相同
+        5.5常用算术生成算法
+            算术生成算法属于小型算法头文件为 numeric
+            5.5.1accumulate
+                功能描述：计算区间内容器元素累计之和
+                函数原型：acculate(iterator beg,iterator end,value)
+                注意事项：value为起始值
+            5.5.2fill
+                功能描述：向容器填充指定元素(覆盖？！)
+                函数原型：fill(iterator beg,iterator end,value)
+        5.6常用集合算法
+            5.6.1set.intersection
+                功能描述：求两个容器的交集
+                函数原型：set.intersection(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                注意事项：
+                    1.开辟目标容器空间时，取两者之中较小容器的大小即可 
+                    2.dest :目标容器开始迭代器
+                    3.返回交集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+            5.6.2set.union
+                功能描述：求两个容器的并集
+                函数原型：set.union(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                注意事项：
+                    1.开辟目标容器空间时，取两者之和容器的大小即可
+                    2.dest :目标容器开始迭代器
+                    3.返回并集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+            5.6.3set.difference
+                功能描述：求两个容器的差集
+                函数原型：set.difference(iterator beg1,iterator end1,iterator beg1,iterator end2,dest)
+                vector<int>::iterator itEnd=set_difference(v1.begin(),v1.end(),v.begin(),v.end(),v2.begin());
+                vector<int>::iterator itEnd=set_difference(v.begin(),v.end(),v1.begin(),v1.end(),v2.begin());
+                注意事项：
+                    1.开辟目标容器空间时，取两者之中较大的容器的大小即可
+                    2.dest :目标容器开始迭代器
+                    3.返回并集中最后一个元素迭代器 
+                    4.交集的两个集合必须是有序序列
+    
+    
+                                                                ------------------20.8.13.晚
+演讲比赛流程管理系统
+    1.1比赛规则
+        1.学校举行一场比赛，共有12个人参加，比赛共两轮，第一轮为淘汰赛，第二轮为决赛
+        2.每名选手都有对应的编号，如10001~10012
+        3.比赛方式：分组比赛，每组六个人
+        4.十个评委分别给每名选手打分，去除最高最低分，求得平均分即为本轮选手成绩
+        5.当小组演讲完后，淘汰组内排名最后的三个选手，前三名晋级，进入下一轮比赛
+        6.第二轮为决赛，前三名胜出
+        7.每轮比赛过后需要显示晋级选手信息
+    1.2程序功能
+        1.开始演讲比赛：完成整届比赛流程，每个比赛阶段都需要给用户一个提示，用户按下任意键后进入下一轮
+        2.查看往届记录：查看之前比赛前三名结果，每次比赛都会记录到文件中，文件用.csv后缀名保存
+        3.清空比赛记录：将文件中数据清空
+        4.退出比赛程序
+            
+
 
 
