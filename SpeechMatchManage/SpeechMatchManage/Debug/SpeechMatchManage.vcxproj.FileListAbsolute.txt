@@ -1,0 +1,2 @@
+E:\VSC_FLIES\C_Flies\C_Code\NoobLatinme\SpeechMatchManage\Debug\SpeechMatchManage.exe
+E:\VSC_FLIES\C_Flies\C_Code\NoobLatinme\SpeechMatchManage\Debug\SpeechMatchManage.pdb
